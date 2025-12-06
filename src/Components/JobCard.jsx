@@ -197,7 +197,6 @@ const JobCard = ({ task }) => {
         </div>
       </div>
 
-      {/* Footer (User & Button) */}
       <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700 mt-auto">
         <div className="flex items-center gap-2">
           {/* User Avatar Initial */}

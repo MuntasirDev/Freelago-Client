@@ -5,6 +5,7 @@ import Home from '../Pages/Home';
 import BrowseTasks from '../Pages/BrowseTask';
 import AddTask from '../Pages/AddTask';
 import MyPostedTask from '../Pages/MyPostedTask';
+import TaskDetails from '../Pages/TaskDetails';
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ index: true,
     },{
       path:"/my-tasks",
       element: <MyPostedTask></MyPostedTask>
+    },
+    {
+      path: "/task/:id",
+      element: <TaskDetails></TaskDetails>
     }
       
 

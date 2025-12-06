@@ -39,7 +39,7 @@ export const Select = ({ value, onValueChange, children }) => {
   );
 };
 
-export const SelectContent = ({ children }) => <div>{children}</div>; // শুধুমাত্র অপশন ধারণ করার জন্য
+export const SelectContent = ({ children }) => <div>{children}</div>; 
 export const SelectItem = ({ children, value, key }) => (
   <option value={value} key={key}>
     {children}
