@@ -1,3 +1,10 @@
 @import "tailwindcss";
 @plugin "daisyui";
+@import url('https://fonts.googleapis.com/css2?family=Ultra&display=swap');
 
+
+.ultra-regular {
+  font-family: "Ultra", serif;
+  font-weight: 600;
+  font-style: normal;
+}
