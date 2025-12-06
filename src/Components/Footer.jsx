@@ -13,11 +13,7 @@ const Footer = () => {
                     <div className="space-y-4">
                         <Link to="/" className="flex items-center gap-2">
                             {/* Replaced from-primary to-accent and text-primary-foreground */}
-                            <div className="h-8 w-8 rounded-lg bg-linear-to-br from-blue-600 to-blue-400 flex items-center justify-center">
-                                <span className="text-white font-bold text-lg">F</span>
-                            </div>
-                            {/* Replaced text-foreground */}
-                            <span className="text-xl font-bold text-gray-900 dark:text-white">FreelaGo</span>
+                           <span className="text-xl font-bold text-gray-900 dark:text-white"> <span className="text-blue-500 ultra-regular font-extrabold text-4xl">F</span>reelaGo</span>
                         </Link>
                         {/* Replaced text-muted-foreground */}
                         <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -32,7 +28,7 @@ const Footer = () => {
                             >
                                 <Facebook className="h-4 w-4" />
                             </a>
-                            <a
+                            <a 
                                 href="#"
                                 className="h-9 w-9 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors"
                             >

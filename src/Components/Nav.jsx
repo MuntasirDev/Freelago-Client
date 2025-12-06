@@ -48,13 +48,9 @@ const Nav = () => {
   const navLinks = [
     { to: "/", label: "Home" },
     { to: "/browse-tasks", label: "Browse Tasks" },
-    
-    ...(user
-      ? [
-          { to: "/add-task", label: "Add Task" },
-          { to: "/my-tasks", label: "My Posted Tasks" },
-        ]
-      : []),
+    { to: "/add-task", label: "Add Task" },
+    { to: "/my-tasks", label: "My Posted Tasks" },
+      
   ];
 
   return (
@@ -63,7 +59,7 @@ const Nav = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold text-gray-900 dark:text-white"> <span className="text-blue-500 ultra-regular font-extrabold text-3xl">F</span>reelaGo</span>
+            <span className="text-xl font-bold text-gray-900 dark:text-white"> <span className="text-blue-500 ultra-regular font-extrabold text-4xl">F</span>reelaGo</span>
           </Link>
 
           {/* Desktop Navigation */}

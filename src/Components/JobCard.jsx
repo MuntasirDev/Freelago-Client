@@ -1,8 +1,12 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-
 import { Calendar, DollarSign, Users } from "lucide-react";
 
+// **********************************************
+// --- EXPORTED DATA AND UTILITY FUNCTIONS ---
+// **********************************************
+
+// Task Data Exported
 export const initialTasks = [
   {
     id: "task_1",
@@ -17,6 +21,7 @@ export const initialTasks = [
     createdAt: new Date().toISOString(),
     bidsCount: 12,
   },
+  // ... (বাকি initialTasks ডেটা) ...
   {
     id: "task_2",
     title: "Logo Design for Tech Startup",
@@ -30,69 +35,67 @@ export const initialTasks = [
     createdAt: new Date().toISOString(),
     bidsCount: 8,
   },
-{
-    id: "task_3",
-    title: "Write SEO Blog Articles",
-    category: "Writing",
-    description: "Need 10 SEO-optimized blog articles about digital marketing. Each article should be 1500+ words.",
-    deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-    budget: 800,
-    userEmail: "mike@example.com",
-    userName: "Mike Johnson",
-    userId: "user_demo_3",
-    createdAt: new Date().toISOString(),
-    bidsCount: 15,
-  },
-  {
-    id: "task_4",
-    title: "Social Media Marketing Campaign",
-    category: "Marketing",
-    description: "Looking for a marketing expert to run a 30-day social media campaign across Instagram and TikTok.",
-    deadline: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-    budget: 1200,
-    userEmail: "emma@example.com",
-    userName: "Emma Wilson",
-    userId: "user_demo_4",
-    createdAt: new Date().toISOString(),
-    bidsCount: 6,
-  },
-  {
-    id: "task_5",
-    title: "Mobile App UI/UX Design",
-    category: "Design",
-    description: "Need complete UI/UX design for a fitness tracking mobile app. Including wireframes and final designs.",
-    deadline: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
-    budget: 1500,
-    userEmail: "alex@example.com",
-    userName: "Alex Brown",
-    userId: "user_demo_5",
-    createdAt: new Date().toISOString(),
-    bidsCount: 20,
-  },
-  {
-    id: "task_6",
-    title: "Data Entry - Product Catalog",
-    category: "Data Entry",
-    description: "Need help entering 500 products into our e-commerce platform. Each product has images, descriptions, and prices.",
-    deadline: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
-    budget: 150,
-    userEmail: "lisa@example.com",
-    userName: "Lisa Chen",
-    userId: "user_demo_6",
-    createdAt: new Date().toISOString(),
-    bidsCount: 25,
-  }
+    {
+    id: "task_3",
+    title: "Write SEO Blog Articles",
+    category: "Writing",
+    description: "Need 10 SEO-optimized blog articles about digital marketing. Each article should be 1500+ words.",
+    deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    budget: 800,
+    userEmail: "mike@example.com",
+    userName: "Mike Johnson",
+    userId: "user_demo_3",
+    createdAt: new Date().toISOString(),
+    bidsCount: 15,
+  },
+  {
+    id: "task_4",
+    title: "Social Media Marketing Campaign",
+    category: "Marketing",
+    description: "Looking for a marketing expert to run a 30-day social media campaign across Instagram and TikTok.",
+    deadline: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+    budget: 1200,
+    userEmail: "emma@example.com",
+    userName: "Emma Wilson",
+    userId: "user_demo_4",
+    createdAt: new Date().toISOString(),
+    bidsCount: 6,
+  },
+  {
+    id: "task_5",
+    title: "Mobile App UI/UX Design",
+    category: "Design",
+    description: "Need complete UI/UX design for a fitness tracking mobile app. Including wireframes and final designs.",
+    deadline: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+    budget: 1500,
+    userEmail: "alex@example.com",
+    userName: "Alex Brown",
+    userId: "user_demo_5",
+    createdAt: new Date().toISOString(),
+    bidsCount: 20,
+  },
+  {
+    id: "task_6",
+    title: "Data Entry - Product Catalog",
+    category: "Data Entry",
+    description: "Need help entering 500 products into our e-commerce platform. Each product has images, descriptions, and prices.",
+    deadline: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
+    budget: 150,
+    userEmail: "lisa@example.com",
+    userName: "Lisa Chen",
+    userId: "user_demo_6",
+    createdAt: new Date().toISOString(),
+    bidsCount: 25,
+  }
 ];
-// **********************************************
 
-// --- UTILITY FUNCTIONS ---
 
 /**
  * Simple date formatting (replaces date-fns/format)
  * @param {string} dateString
  * @returns {string} Formatted date (e.g., "Dec 06 2025")
  */
-const simpleDateFormat = (dateString) => {
+export const simpleDateFormat = (dateString) => { // <-- EXPORTED
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return "N/A";
   const options = { month: 'short', day: '2-digit', year: 'numeric' };
@@ -100,8 +103,7 @@ const simpleDateFormat = (dateString) => {
 };
 
 
-
-const categoryColors = {
+export const categoryColors = { // <-- EXPORTED
   "Web Development": "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
   "Mobile Development": "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300",
   "Design": "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300",
@@ -112,19 +114,25 @@ const categoryColors = {
   "Other": "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
 };
 
+// ক্যাটাগরি লিস্ট ড্রপডাউনের জন্য প্রয়োজন, এটি initialTasks থেকে ডিরাইভ করা হয়েছে
+export const TASK_CATEGORIES = Array.from(new Set(initialTasks.map(task => task.category))); // <-- EXPORTED
 
+
+// **********************************************
+// --- JobCard COMPONENT (DEFAULT EXPORT) ---
+// **********************************************
 const JobCard = ({ task }) => {
   
   const defaultTask = initialTasks[0] || { 
-        id: "default_1",
-        title: "Default Task: Setup Node.js API",
-        description: "Placeholder task data from local const.",
-        category: "Web Development",
-        budget: 750,
-        deadline: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-        bidsCount: 9,
-        userName: "Alex B",
-    };
+        id: "default_1",
+        title: "Default Task: Setup Node.js API",
+        description: "Placeholder task data from local const.",
+        category: "Web Development",
+        budget: 750,
+        deadline: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+        bidsCount: 9,
+        userName: "Alex B",
+    };
   
   const currentTask = task || defaultTask;
 
@@ -162,7 +170,7 @@ const JobCard = ({ task }) => {
       </h3>
 
     
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 flex-grow">
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 grow">
         {currentTask.description}
       </p>
 
