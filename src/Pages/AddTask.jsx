@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CalendarIcon, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 // Sonner Toast ইম্পোর্ট করা হলো 
 import { toast } from 'sonner'; 
+// Toaster ইম্পোর্ট করা হলো
+import { Toaster } from 'sonner'; 
 
 // --- UI COMPONENT IMPORTS ---
 // UI কম্পোনেন্ট পাথ ঠিক করা হয়েছে
@@ -15,11 +17,18 @@ import {
     Select, 
     SelectContent, 
     SelectItem, 
-    SelectValue 
+    SelectValue,
+    SelectTrigger // SelectTrigger ইম্পোর্ট করা হয়েছে
 } from "../Components/UI/Select";
 
-// --- ডেটা এবং ইউটিলিটি ইম্পোর্ট ---
-import { TASK_CATEGORIES } from "../Components/JobCard"; 
+// ধরে নিলাম এটি একটি আলাদা ফাইল, তাই আপাতত মক ডেটা ব্যবহার করা হলো
+const TASK_CATEGORIES = [
+    "Web Development",
+    "Mobile Development",
+    "Graphic Design",
+    "Writing & Translation",
+    "Data Entry",
+];
 
 // ****************************
 // --- MOCK CONTEXTS (For Demo) ---
@@ -54,7 +63,8 @@ const AddTask = () => {
 
     // State
     const [title, setTitle] = useState("");
-    const [category, setCategory] = useState("");
+    // ✅ FIX: category state-এ একটি প্রাথমিক মান সেট করা হলো (প্রথম ক্যাটাগরি)
+    const [category, setCategory] = useState(TASK_CATEGORIES[0] || "");
     const [description, setDescription] = useState("");
     const [deadline, setDeadline] = useState(""); 
     const [budget, setBudget] = useState("");
@@ -64,6 +74,8 @@ const AddTask = () => {
         e.preventDefault();
 
         // 1. Validation
+        // এখন category state-এ যেহেতু প্রাথমিক মান আছে, তাই Web Development সিলেক্ট করা থাকলে 
+        // এই ভ্যালিডেশনটি আর Fail করবে না।
         if (!title || !category || !description || !deadline || !budget) {
             toast.error("Please fill in all required fields.");
             return;
@@ -80,7 +92,7 @@ const AddTask = () => {
         const today = new Date();
         today.setHours(0, 0, 0, 0); 
         
-        if (deadlineDate < today) {
+        if (new Date(deadlineDate).getTime() < today.getTime()) {
             toast.error("Deadline must be today or in the future.");
             return;
         }
@@ -107,9 +119,9 @@ const AddTask = () => {
         } catch (error) {
             console.error("Task submission error:", error);
             toast.error("Failed to post task. Please try again.");
-        } 
-        // Note: finally ব্লকটি এখানে বাদ দেওয়া হয়েছে কারণ navigate() কল করা হচ্ছে। 
-        // যদি navigate() না করা হতো, তবে setIsLoading(false) ব্যবহার করা হতো।
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     // Calculate minimum date for the date input (today's date in YYYY-MM-DD format)
@@ -117,6 +129,9 @@ const AddTask = () => {
 
     return (
         <Layout>
+            {/* Toaster component */}
+            <Toaster position="top-right" richColors /> 
+            
             <div className="flex justify-center items-start min-h-[calc(100vh-64px)] py-12 bg-gray-50 dark:bg-gray-900">
                 <div className="max-w-xl w-full p-4">
                     
@@ -145,10 +160,15 @@ const AddTask = () => {
                         {/* 2. Category Select */}
                         <div className="space-y-2">
                             <Label htmlFor="category">Category *</Label>
-                            <Select value={category} onValueChange={setCategory}>
-                                <SelectValue placeholder="Select a category" />
+                            <Select 
+                                value={category} 
+                                onValueChange={setCategory}
+                            >
+                                <SelectTrigger> 
+                                     {/* SelectValue এখন category state-এর প্রাথমিক মান দেখাবে */}
+                                     <SelectValue placeholder="Select a category" />
+                                 </SelectTrigger>
                                 <SelectContent>
-                                    {/* JobCard থেকে ইম্পোর্ট করা TASK_CATEGORIES ব্যবহার করা হলো */}
                                     {TASK_CATEGORIES.map((cat) => (
                                         <SelectItem key={cat} value={cat}>
                                             {cat}
@@ -174,27 +194,52 @@ const AddTask = () => {
                             </p>
                         </div>
 
-                      
-                          {/* 4. Deadline and Budget (Two Columns) */}
-<div className="grid grid-cols-2 gap-4">
-    {/* Deadline */}
+                        {/* 4. Deadline and Budget (Two Columns) */}
+                        <div className="grid grid-cols-2 gap-4">
+                            {/* Deadline */}
+                            <div className="space-y-2">
+                                <Label htmlFor="deadline">Deadline *</Label>
+                                <div className="relative">
+                                    
+                                    <Input
+                                        id="deadline"
+                                        type="date"
+                                        value={deadline}
+                                        onChange={(e) => setDeadline(e.target.value)}
+                                        min={minDate} 
+                                        // তারিখ নির্বাচন না হওয়া পর্যন্ত টেক্সট লুকানোর জন্য এটি দরকার
+                                        className={`appearance-none pr-3 ${ 
+                                            !deadline ? 'text-transparent dark:text-transparent' : 'text-gray-900 dark:text-white'
+                                        } focus:text-gray-900 dark:focus:text-white`}
+                                    />
+                                    
+                                    {/* কাস্টম "Pick a date" প্লেসহোল্ডার */}
+                                    {!deadline && (
+                                        <div 
+                                            // pointer-events-none নিশ্চিত করে যে ক্লিক নিচের ইনপুট এলিমেন্টের কাছে পৌঁছায়।
+                                            className="absolute inset-0 flex items-center pl-3 pointer-events-none" 
+                                        >
+                                            <span className="text-gray-500 dark:text-gray-400">Pick a date</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
 
 
-
-    {/* Budget */}
-    <div className="space-y-2">
-        <Label htmlFor="budget">Budget (USD) *</Label>
-        <Input
-            id="budget"
-            type="number"
-            placeholder="e.g., 500"
-            value={budget}
-            onChange={(e) => setBudget(e.target.value)}
-            min="1"
-            step="1"
-        />
-    </div>
-</div>
+                            {/* Budget */}
+                            <div className="space-y-2">
+                                <Label htmlFor="budget">Budget (USD) *</Label>
+                                <Input
+                                    id="budget"
+                                    type="number"
+                                    placeholder="e.g., 500"
+                                    value={budget}
+                                    onChange={(e) => setBudget(e.target.value)}
+                                    min="1"
+                                    step="1"
+                                />
+                            </div>
+                        </div>
                         {/* 5. User Info (Read-Only) */}
                         <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                             <div className="space-y-2">
@@ -220,9 +265,9 @@ const AddTask = () => {
                             <Button 
                                 type="button" 
                                 variant="" 
-                                onClick={() => navigate(-1)} // ✅ Cancel Button Fix
-                                className="flex-1 bg-blue-500"
-                                disabled={isLoading} // Loading অবস্থায় বাটন ডিজেবল
+                                onClick={() => navigate(-1)} 
+                                className="flex-1"
+                                disabled={isLoading} 
                             >
                                 Cancel
                             </Button>
