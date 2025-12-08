@@ -10,3 +10,5 @@ export const Button = ({ children, type = "button", onClick, className = "", var
         {children}
     </button>
 );
+
+export default Button

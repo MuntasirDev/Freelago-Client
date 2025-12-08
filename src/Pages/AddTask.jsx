@@ -136,9 +136,9 @@ const AddTask = () => {
                 <div className="max-w-xl w-full p-4">
                     
                     {/* Header Section */}
-                    <div className="mb-8 text-center">
-                        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-1">Post a New Task</h1>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="mb-10 text-center">
+                        <h1 className="text-4xl font-semibold text-gray-900 dark:text-white mb-4">Post a New Task</h1>
+                        <p className="text-xl text-gray-600 dark:text-gray-400">
                             Describe your task and let freelancers bid on it
                         </p>
                     </div>
