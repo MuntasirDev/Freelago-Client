@@ -1,248 +1,286 @@
-// src/components/MyPostedTask.jsx (কোনো পরিবর্তন ছাড়াই এটি মডিউলারাইজড)
-
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Edit2, Trash2, Eye, Plus, Calendar, DollarSign, Users } from "lucide-react";
+// NOTE: These icon imports are necessary for a functional React component.
+import { Edit2, Trash2, Eye, Plus, Calendar, DollarSign, Users } from "lucide-react"; 
 import { format } from "date-fns";
-import { toast, Toaster } from "sonner";
+// Updated Layout import path
+import Layout from "../Components/UI/Layout"; 
+// Using sonner for toast notifications
+import { toast } from "sonner"; 
 
-// --- 1. UI Components Import (assuming path is correct and index.jsx handles sub-exports) ---
-import { 
-    Button, Badge, Layout, LoadingSpinner, 
-    Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
-    AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel
-} from "../Components/UI/Calender"; 
+// --- Configuration and Mock Data (Using only local data) ---
 
-
-const MyPostedTask = () => {
-    // Hooks initialization
-    const { user } = useAuth();
-    const { getUserTasks, deleteTask, isLoading } = useTasks();
-    const navigate = useNavigate(); 
-    const [openAlertId, setOpenAlertId] = useState(null);
-
-    const myTasks = getUserTasks(user?.id || "");
-
-    const handleDelete = (taskId) => {
-        deleteTask(taskId);
-        toast.success("Task deleted successfully");
-        setOpenAlertId(null);
-    };
-
-    const mockNavigate = (path) => toast.info(`Navigating to: ${path}`);
-    
-
-    if (isLoading) {
-        return (
-            <Layout>
-                <div className="container-custom py-12">
-                    <LoadingSpinner text="Loading your tasks..." />
-                </div>
-            </Layout>
-        );
-    }
-
-    return (
-        <Layout>
-            {/* Toaster for notifications */}
-            <Toaster position="top-right" richColors />
-
-            <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-                {/* Header and Post New Task Button */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">My Posted Tasks</h1>
-                        <p className="text-gray-600 dark:text-gray-400">
-                            Manage all the tasks you've posted on FreelaGo
-                        </p>
-                    </div>
-                    <Button asChild>
-                        <Link to="/add-task" onClick={() => mockNavigate("/add-task")}>
-                            <Plus className="mr-2 h-4 w-4" />
-                            Post New Task
-                        </Link>
-                    </Button>
-                </div>
-
-                {myTasks.length === 0 ? (
-                    /* Empty State (Your original logic) */
-                    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-12 text-center">
-                        <div className="h-24 w-24 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
-                            <Plus className="h-12 w-12 text-gray-500 dark:text-gray-400" />
-                        </div>
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No tasks yet</h3>
-                        <p className="text-gray-600 dark:text-gray-400 mb-6">
-                            You haven't posted any tasks yet. Start by creating your first task!
-                        </p>
-                        <Button asChild>
-                            <Link to="/add-task" onClick={() => mockNavigate("/add-task")}>
-                                <Plus className="mr-2 h-4 w-4" />
-                                Post Your First Task
-                            </Link>
-                        </Button>
-                    </div>
-                ) : (
-                    <>
-                        {/* Mobile View */}
-                        <div className="lg:hidden space-y-4">
-                             {myTasks.map((task) => (
-                                <div key={task.id} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-                                    <div className="flex items-start justify-between mb-3">
-                                        <Badge className={categoryColors[task.category] || categoryColors["Other"]}>
-                                            {task.category}
-                                        </Badge>
-                                        <span className="text-sm text-gray-600 dark:text-gray-400">
-                                            {task.bidsCount} bids
-                                        </span>
-                                    </div>
-                                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">
-                                        {task.title}
-                                    </h3>
-                                    <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                        <div className="flex items-center gap-1">
-                                            <DollarSign className="h-4 w-4" />
-                                            ${task.budget}
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <Calendar className="h-4 w-4" />
-                                            {format(new Date(task.deadline), "MMM dd")}
-                                        </div>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => mockNavigate(`/task/${task.id}`)}
-                                            className="flex-1"
-                                        >
-                                            <Eye className="mr-1 h-4 w-4" /> View
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => mockNavigate(`/edit-task/${task.id}`)}
-                                            className="flex-1"
-                                        >
-                                            <Edit2 className="mr-1 h-4 w-4" /> Edit
-                                        </Button>
-                                        
-                                        <AlertDialog open={openAlertId === task.id} onOpenChange={(open) => setOpenAlertId(open ? task.id : null)}>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="destructive" size="sm" onClick={() => setOpenAlertId(task.id)}>
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            </AlertDialogTrigger>
-                                            {openAlertId === task.id && (
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader>
-                                                        <AlertDialogTitle>Delete Task</AlertDialogTitle>
-                                                        <AlertDialogDescription>
-                                                            Are you sure you want to delete "{task.title}"? This action cannot be undone.
-                                                        </AlertDialogDescription>
-                                                    </AlertDialogHeader>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel onClick={() => setOpenAlertId(null)}>Cancel</AlertDialogCancel>
-                                                        <AlertDialogAction
-                                                            onClick={() => handleDelete(task.id)}
-                                                            className="bg-red-600 hover:bg-red-700 text-white"
-                                                        >
-                                                            Delete
-                                                        </AlertDialogAction>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            )}
-                                        </AlertDialog>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Desktop View */}
-                        <div className="hidden lg:block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="bg-gray-50 dark:bg-gray-700">
-                                        <TableHead>Title</TableHead>
-                                        <TableHead>Category</TableHead>
-                                        <TableHead>Budget</TableHead>
-                                        <TableHead>Deadline</TableHead>
-                                        <TableHead>Bids</TableHead>
-                                        <TableHead className="text-right">Actions</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {myTasks.map((task) => (
-                                        <TableRow key={task.id}>
-                                            <TableCell className="font-medium max-w-[200px] truncate text-gray-900 dark:text-white">
-                                                {task.title}
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge className={categoryColors[task.category] || categoryColors["Other"]}>
-                                                    {task.category}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell className="text-gray-900 dark:text-white">${task.budget}</TableCell>
-                                            <TableCell className="text-gray-600 dark:text-gray-400">{format(new Date(task.deadline), "MMM dd, yyyy")}</TableCell>
-                                            <TableCell>
-                                                <div className="flex items-center gap-1 text-gray-900 dark:text-white">
-                                                    <Users className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                                                    {task.bidsCount}
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className="text-right">
-                                                <div className="flex items-center justify-end gap-2">
-                                                    <Button variant="ghost" size="sm" onClick={() => mockNavigate(`/task/${task.id}`)} title="View Task">
-                                                        <Eye className="h-4 w-4" />
-                                                    </Button>
-                                                    <Button variant="ghost" size="sm" onClick={() => mockNavigate(`/edit-task/${task.id}`)} title="Edit Task">
-                                                        <Edit2 className="h-4 w-4" />
-                                                    </Button>
-                                                    
-                                                    <AlertDialog open={openAlertId === task.id} onOpenChange={(open) => setOpenAlertId(open ? task.id : null)}>
-                                                        <AlertDialogTrigger asChild>
-                                                            <Button variant="ghost" size="sm" onClick={() => setOpenAlertId(task.id)} title="Delete Task">
-                                                                <Trash2 className="h-4 w-4 text-red-500 dark:text-red-400" />
-                                                            </Button>
-                                                        </AlertDialogTrigger>
-                                                        {openAlertId === task.id && (
-                                                            <AlertDialogContent>
-                                                                <AlertDialogHeader>
-                                                                    <AlertDialogTitle>Delete Task</AlertDialogTitle>
-                                                                    <AlertDialogDescription>
-                                                                        Are you sure you want to delete "{task.title}"? This action cannot be undone.
-                                                                    </AlertDialogDescription>
-                                                                </AlertDialogHeader>
-                                                                <AlertDialogFooter>
-                                                                    <AlertDialogCancel onClick={() => setOpenAlertId(null)}>Cancel</AlertDialogCancel>
-                                                                    <AlertDialogAction
-                                                                        onClick={() => handleDelete(task.id)}
-                                                                        className="bg-red-600 hover:bg-red-700 text-white"
-                                                                    >
-                                                                        Delete
-                                                                    </AlertDialogAction>
-                                                                </AlertDialogFooter>
-                                                            </AlertDialogContent>
-                                                        )}
-                                                    </AlertDialog>
-                                                    <Button
-                                                        variant="secondary"
-                                                        size="sm"
-                                                        onClick={() => toast.info(`Viewing ${task.bidsCount} bids for ${task.title}`)}
-                                                    >
-                                                        Bids ({task.bidsCount})
-                                                    </Button>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </div>
-                    </>
-                )}
-            </div>
-        </Layout>
-    );
+// DaisyUI classes for category colors
+const categoryColors = {
+  "Web Development": "badge-primary",
+  "Mobile Development": "badge-secondary",
+  "Design": "badge-accent",
+  "Writing": "badge-info",
+  "Marketing": "badge-success",
+  "Data Entry": "badge-warning",
+  "Video Editing": "badge-error",
+  "Other": "badge-neutral",
 };
 
-export default MyPostedTask;
+// Mock Task Structure (This will be the data source now)
+const initialMockTasks = [
+  {
+    id: "1",
+    title: "Develop API Endpoint for User Auth",
+    category: "Web Development",
+    budget: "500",
+    deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    bidsCount: 12,
+  },
+  {
+    id: "2",
+    title: "Design Landing Page for SaaS Product",
+    category: "Design",
+    budget: "1200",
+    deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+    bidsCount: 5,
+  },
+  {
+    id: "3",
+    title: "Fix broken CSS on Mobile View",
+    category: "Mobile Development",
+    budget: "150",
+    deadline: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    bidsCount: 1,
+  },
+];
+// ------------------------------------
+
+const MyPostedTasks = () => {
+  // Use local state for tasks since we removed useTasks/useAuth
+  const [myTasks, setMyTasks] = useState(initialMockTasks);
+  const [isLoading, setIsLoading] = useState(false); // Can simulate loading if needed
+  const navigate = useNavigate();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+
+  // Simulation of task deletion (since we removed the context/backend logic)
+  const handleDelete = () => {
+    if (taskToDelete) {
+      // Simulate API call delay (optional)
+      setIsLoading(true); 
+      
+      setTimeout(() => {
+        setMyTasks(prevTasks => prevTasks.filter(task => task.id !== taskToDelete.id));
+        toast.success(`Task "${taskToDelete.title}" deleted successfully.`); // Using Sonner
+        setDeleteModalOpen(false);
+        setTaskToDelete(null);
+        setIsLoading(false);
+      }, 500);
+    }
+  };
+
+  const openDeleteModal = (id, title) => {
+    setTaskToDelete({ id, title });
+    setDeleteModalOpen(true);
+  };
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="container-custom py-12 flex justify-center">
+          {/* DaisyUI Loading Spinner */}
+          <span className="loading loading-spinner loading-lg text-primary"></span>
+        </div>
+      </Layout>
+    );
+  }
+
+  return (
+    <Layout>
+      <div className="container-custom py-8">
+        
+        {/* === Header Section === */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">My Posted Tasks</h1>
+            <p className="text-base-content/70">Manage all the tasks you've posted</p>
+          </div>
+          {/* DaisyUI Button with Link */}
+          <Link to="/add-task" className="btn btn-primary">
+            <Plus className="h-4 w-4" />
+            Post New Task
+          </Link>
+        </div>
+
+        {/* === Empty State (DaisyUI Card) === */}
+        {myTasks.length === 0 ? (
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body items-center text-center py-12">
+              <div className="h-24 w-24 rounded-full bg-base-200 flex items-center justify-center mb-4">
+                <Plus className="h-12 w-12 text-base-content/30" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">No tasks yet</h3>
+              <p className="text-base-content/70 mb-6">You haven't posted any tasks yet.</p>
+              <Link to="/add-task" className="btn btn-primary">
+                <Plus className="h-4 w-4" />
+                Post Your First Task
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* === Mobile View (DaisyUI Cards) === */}
+            <div className="lg:hidden space-y-4">
+              {myTasks.map((task) => (
+                <div key={task.id} className="card bg-base-100 shadow-md">
+                  <div className="card-body p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      {/* Category Badge */}
+                      <span className={`badge ${categoryColors[task.category] || "badge-neutral"}`}>
+                        {task.category}
+                      </span>
+                      <div className="flex items-center gap-1 text-sm text-base-content/70">
+                        <Users className="h-4 w-4" />
+                        <span>{task.bidsCount} bids</span>
+                      </div>
+                    </div>
+                    
+                    <h3 className="font-semibold line-clamp-1 mb-2">{task.title}</h3>
+                    
+                    {/* Details Row */}
+                    <div className="flex items-center gap-4 text-sm text-base-content/70 mb-4">
+                      <div className="flex items-center gap-1">
+                        <DollarSign className="h-4 w-4" />
+                        ${task.budget}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        {format(new Date(task.deadline), "MMM dd")}
+                      </div>
+                    </div>
+                    
+                    {/* Action Buttons */}
+                    <div className="flex gap-2">
+                      <button
+                        className="btn btn-outline btn-sm flex-1"
+                        onClick={() => navigate(`/task/${task.id}`)}
+                      >
+                        <Eye className="h-4 w-4" />
+                        View
+                      </button>
+                      <button
+                        className="btn btn-outline btn-sm flex-1"
+                        onClick={() => navigate(`/edit-task/${task.id}`)}
+                      >
+                        <Edit2 className="h-4 w-4" />
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-error btn-sm"
+                        onClick={() => openDeleteModal(task.id, task.title)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* === Desktop View (DaisyUI Table) === */}
+            <div className="hidden lg:block card bg-base-100 shadow-xl overflow-hidden">
+              <div className="overflow-x-auto">
+                {/* DaisyUI Table */}
+                <table className="table w-full">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Category</th>
+                      <th>Budget</th>
+                      <th>Deadline</th>
+                      <th>Bids</th>
+                      <th className="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {myTasks.map((task) => (
+                      <tr key={task.id}>
+                        <td className="font-medium max-w-[200px] truncate">{task.title}</td>
+                        <td>
+                          {/* Category Badge */}
+                          <span className={`badge ${categoryColors[task.category] || "badge-neutral"}`}>
+                            {task.category}
+                          </span>
+                        </td>
+                        <td>${task.budget}</td>
+                        <td>{format(new Date(task.deadline), "MMM dd, yyyy")}</td>
+                        <td>
+                          <div className="flex items-center gap-1">
+                            <Users className="h-4 w-4 text-base-content/70" />
+                            {task.bidsCount}
+                          </div>
+                        </td>
+                        <td className="text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            {/* View */}
+                            <button
+                              className="btn btn-ghost btn-sm"
+                              onClick={() => navigate(`/task/${task.id}`)}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
+                            {/* Edit */}
+                            <button
+                              className="btn btn-ghost btn-sm"
+                              onClick={() => navigate(`/edit-task/${task.id}`)}
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                            {/* Delete */}
+                            <button
+                              className="btn btn-ghost btn-sm text-error"
+                              onClick={() => openDeleteModal(task.id, task.title)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                            {/* Bids Button */}
+                            <button
+                              className="btn btn-secondary btn-sm"
+                              // Using Sonner toast
+                              onClick={() => toast.info(`Navigating to view bids for: ${task.title}`)}
+                            >
+                              Bids
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* === Delete Confirmation Modal (DaisyUI) === */}
+        <dialog className={`modal ${deleteModalOpen ? "modal-open" : ""}`}>
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Delete Task</h3>
+            <p className="py-4">
+              Are you sure you want to delete **"{taskToDelete?.title}"**? This action cannot be undone.
+            </p>
+            <div className="modal-action">
+              <button className="btn" onClick={() => setDeleteModalOpen(false)}>
+                Cancel
+              </button>
+              <button className="btn btn-error" onClick={handleDelete} disabled={isLoading}>
+                {isLoading ? <span className="loading loading-spinner"></span> : 'Delete'}
+              </button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={() => setDeleteModalOpen(false)}>close</button>
+          </form>
+        </dialog>
+      </div>
+    </Layout>
+  );
+};
+
+export default MyPostedTasks;

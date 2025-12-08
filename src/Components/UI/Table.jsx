@@ -1,12 +1,32 @@
 import * as React from "react";
-const Table = ({ children, className, ...props }) => <div className="relative w-full overflow-auto"><table className={`w-full caption-bottom text-sm ${className || ''}`} {...props}>{children}</table></div>;
-const TableHeader = ({ children, className, ...props }) => <thead className={`[&_tr]:border-b ${className || ''}`} {...props}>{children}</thead>;
-const TableBody = ({ children, className, ...props }) => <tbody className={`[&_tr:last-child]:border-0 ${className || ''}`} {...props}>{children}</tbody>;
-const TableFooter = ({ children, className, ...props }) => <tfoot className={`border-t bg-gray-100/50 dark:bg-gray-700/50 font-medium [&>tr]:last:border-b-0 ${className || ''}`} {...props}>{children}</tfoot>;
-const TableRow = ({ children, className, ...props }) => <tr className={`border-b transition-colors data-[state=selected]:bg-gray-100 hover:bg-gray-50/50 dark:hover:bg-gray-800/50 ${className || ''}`} {...props}>{children}</tr>;
-const TableHead = ({ children, className, ...props }) => <th className={`h-12 px-4 text-left align-middle font-medium text-gray-500 dark:text-gray-400 [&:has([role=checkbox])]:pr-0 ${className || ''}`} {...props}>{children}</th>;
-const TableCell = ({ children, className, ...props }) => <td className={`p-4 align-middle [&:has([role=checkbox])]:pr-0 ${className || ''}`} {...props}>{children}</td>;
-const TableCaption = ({ children, className, ...props }) => <caption className={`mt-4 text-sm text-gray-500 dark:text-gray-400 ${className || ''}`} {...props}>{children}</caption>;
+
+// --- Table Components (Named Exports) ---
+// The 'export const' syntax allows these components to be imported by name { Table, TableHeader, ... }
+export const Table = ({ children, className, ...props }) => 
+    <div className="relative w-full overflow-auto">
+        <table className={`w-full caption-bottom text-sm ${className || ''}`} {...props}>{children}</table>
+    </div>;
+    
+export const TableHeader = ({ children, className, ...props }) => 
+    <thead className={`[&_tr]:border-b ${className || ''}`} {...props}>{children}</thead>;
+    
+export const TableBody = ({ children, className, ...props }) => 
+    <tbody className={`[&_tr:last-child]:border-0 ${className || ''}`} {...props}>{children}</tbody>;
+    
+export const TableFooter = ({ children, className, ...props }) => 
+    <tfoot className={`border-t bg-gray-100/50 dark:bg-gray-700/50 font-medium [&>tr]:last:border-b-0 ${className || ''}`} {...props}>{children}</tfoot>;
+    
+export const TableRow = ({ children, className, ...props }) => 
+    <tr className={`border-b transition-colors data-[state=selected]:bg-gray-100 hover:bg-gray-50/50 dark:hover:bg-gray-800/50 ${className || ''}`} {...props}>{children}</tr>;
+    
+export const TableHead = ({ children, className, ...props }) => 
+    <th className={`h-12 px-4 text-left align-middle font-medium text-gray-500 dark:text-gray-400 [&:has([role=checkbox])]:pr-0 ${className || ''}`} {...props}>{children}</th>;
+    
+export const TableCell = ({ children, className, ...props }) => 
+    <td className={`p-4 align-middle [&:has([role=checkbox])]:pr-0 ${className || ''}`} {...props}>{children}</td>;
+    
+export const TableCaption = ({ children, className, ...props }) => 
+    <caption className={`mt-4 text-sm text-gray-500 dark:text-gray-400 ${className || ''}`} {...props}>{children}</caption>;
 
 
 
@@ -38,8 +58,6 @@ const MOCK_INVOICES = [
     },
 ];
 
-
-
 const getStatusBadge = (status) => {
     let badgeClass = "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium";
     
@@ -56,9 +74,11 @@ const getStatusBadge = (status) => {
 };
 
 
+// --- Main Component (Default Export) ---
 
 const InvoiceTable = () => {
- 
+    // Note: Since all the Table components are now exported, 
+    // we can use them directly here.
     const totalAmount = MOCK_INVOICES.reduce((sum, invoice) => sum + invoice.amount, 0);
 
     return (

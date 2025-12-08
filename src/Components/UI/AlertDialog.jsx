@@ -1,34 +1,6 @@
 import React, { useState } from 'react';
-// ধরে নিচ্ছি আপনার আসল Button কম্পোনেন্টটি এখানে আছে
-// import { Button } from './ui/Button'; 
-
-// 💡 Mock Button Component (যদি আপনার কাছে আসল বাটন না থাকে)
-// এইটি আগের উদাহরণের buttonVariants() এর আউটপুটকে অনুকরণ করবে।
-const Button = ({ children, onClick, variant = 'default', className = '' }) => {
-    let baseClasses = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors h-10 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-offset-2 ring-offset-background disabled:opacity-50 disabled:pointer-events-none";
-    let variantClasses;
-
-    if (variant === 'outline') {
-        variantClasses = "border border-input bg-background hover:bg-accent hover:text-accent-foreground dark:text-gray-100 dark:border-gray-600";
-    } else if (variant === 'destructive') {
-        variantClasses = "bg-red-600 text-white hover:bg-red-700";
-    } else {
-        variantClasses = "bg-blue-600 text-white hover:bg-blue-700";
-    }
-
-    return (
-        <button 
-            onClick={onClick} 
-            className={`${baseClasses} ${variantClasses} ${className}`}
-        >
-            {children}
-        </button>
-    );
-};
-
-
-// --- Custom Modal Component ---
-const CustomAlertDialog = () => {
+import Button from "../UI/Button.jsx"
+const AlertDialog = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const handleConfirm = () => {
@@ -96,4 +68,4 @@ const CustomAlertDialog = () => {
     );
 };
 
-export default CustomAlertDialog;
+export { AlertDialog }; // <-- Use named export
