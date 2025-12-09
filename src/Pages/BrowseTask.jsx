@@ -88,11 +88,11 @@ const BrowseTasks = () => {
 
     return (
         <Layout>
-            <div className="container-custom mx-auto max-w-7xl px-4 py-8">
+            <div className="container-custom mx-auto max-w-7xl px-4 py-8 bg-white  dark:bg-black">
                 
                 {/* Header Section */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Browse Tasks</h1>
+                    <h1 className="text-3xl font-bold dark:text-white text-gray-900 mb-2">Browse Tasks</h1>
                     <p className="text-gray-600">
                         Find the perfect task that matches your skills and interests
                     </p>
@@ -178,9 +178,6 @@ const BrowseTasks = () => {
                     </div>
                 ) : (
                     <>
-                        <p className="text-sm text-gray-600 mb-4">
-                            Showing **{filteredTasks.length}** task{filteredTasks.length !== 1 ? "s" : ""}
-                        </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filteredTasks.map((task, index) => (
                                 <div

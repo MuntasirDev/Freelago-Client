@@ -89,13 +89,13 @@ const MyPostedTasks = () => {
 
     return (
         <Layout>
-            <div className="container-custom py-8">
+            <div className="container-custom py-8 dark:text-white">
                 
                 {/* Header Section */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                     <div>
                         <h1 className="text-3xl font-bold mb-2">My Posted Tasks</h1>
-                        <p className="text-base-content/70">Manage all the tasks you've posted</p>
+                        <p className="text-base-content/70 dark:text-white">Manage all the tasks you've posted</p>
                     </div>
                     {/* Post New Task Button */}
                     <Link to="/add-task" className="btn bg-blue-500 text-white hover:bg-blue-700 rounded-lg">
@@ -122,16 +122,16 @@ const MyPostedTasks = () => {
                 ) : (
                     <>
                         {/* Mobile View (Cards) */}
-                        <div className="lg:hidden space-y-4">
+                        <div className="lg:hidden space-y-4 ">
                             {myTasks.map((task) => (
-                                <div key={task.id} className="card bg-base-100 shadow-md">
+                                <div key={task.id} className="card bg-base-100 shadow-md dark:bg-gray-900 dark:text-white">
                                     <div className="card-body p-4">
-                                        <div className="flex items-start justify-between mb-3">
+                                        <div className="flex items-start justify-between mb-3 ">
                                             {/* Category Badge */}
                                             <span className={`badge ${categoryColors[task.category] || "badge-neutral"}`}>
                                                 {task.category}
                                             </span>
-                                            <div className="flex items-center gap-1 text-sm text-base-content/70">
+                                            <div className="flex items-center gap-1 text-sm text-base-content/70 dark:text-white ">
                                                 <Users className="h-4 w-4" />
                                                 <span>{task.bidsCount} bids</span>
                                             </div>
@@ -140,10 +140,10 @@ const MyPostedTasks = () => {
                                         <h3 className="font-semibold line-clamp-1 mb-2">{task.title}</h3>
                                         
                                         {/* Details Row */}
-                                        <div className="flex items-center gap-4 text-sm text-base-content/70 mb-4">
+                                        <div className="flex items-center gap-4 text-sm text-base-content/70 dark:text-white mb-4">
                                             <div className="flex items-center gap-1">
                                                 <DollarSign className="h-4 w-4" />
-                                                **${task.budget}**
+                                                {task.budget}
                                             </div>
                                             <div className="flex items-center gap-1">
                                                 <Calendar className="h-4 w-4" />
@@ -196,23 +196,23 @@ const MyPostedTasks = () => {
                                     <tbody>
                                         {myTasks.map((task) => (
                                             <tr key={task.id}>
-                                                <td className="font-medium max-w-[200px] truncate">{task.title}</td>
+                                                <td className="font-medium max-w-[200px] dark:text-black truncate">{task.title}</td>
                                                 <td>
                                                     {/* Category Badge */}
                                                     <span className={`badge ${categoryColors[task.category] || "badge-neutral"}`}>
                                                         {task.category}
                                                     </span>
                                                 </td>
-                                                <td>**${task.budget}**</td>
-                                                <td>{format(new Date(task.deadline), "MMM dd, yyyy")}</td>
-                                                <td>
+                                                <td className="dark:text-black">${task.budget}</td>
+                                                <td className="dark:text-black">{format(new Date(task.deadline), "MMM dd, yyyy")}</td>
+                                                <td className="dark:text-black">
                                                     <div className="flex items-center gap-1">
                                                         <Users className="h-4 w-4 text-base-content/70" />
                                                         {task.bidsCount}
                                                     </div>
                                                 </td>
                                                 <td className="text-right">
-                                                    <div className="flex items-center justify-end gap-2">
+                                                    <div className="flex items-center justify-end gap-2 text-black">
                                                         {/* View */}
                                                         <button
                                                             className="btn btn-ghost btn-sm"

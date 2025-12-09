@@ -128,11 +128,15 @@ const TaskDetails = () => {
             <Toaster position="top-right" richColors /> 
 
             <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 max-w-7xl">
-                <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back
-                </Button>
 
+<Button 
+    onClick={() => navigate(-1)} 
+    // Remove 'variant="outline"' to use the default solid style
+    className="flex items-center mb-6 bg-blue-500 text-white border-none shadow-md" 
+>
+    <ArrowLeft className="mr-2 h-4 w-4" />
+    Go Back
+</Button>
                 {userBidsCount > 0 && (
                     <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-700 rounded-lg p-4 mb-6">
                         <p className="text-blue-700 dark:text-blue-300 font-medium">
@@ -161,7 +165,7 @@ const TaskDetails = () => {
                             <div className="flex flex-wrap gap-4 mb-6">
                                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                                     <DollarSign className="h-5 w-5 text-green-500" />
-                                    <span className="font-semibold text-gray-900 dark:text-white">${task.budget}</span>
+                                    <span className="font-semibold text-gray-900 dark:text-white">{task.budget}</span>
                                     <span>Budget</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
@@ -194,7 +198,7 @@ const TaskDetails = () => {
                             <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Place Your Bid</h2>
                                 <div className="space-y-4">
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 dark:text-white">
                                         <Label htmlFor="bidAmount">Your Bid Amount (USD)</Label>
                                         <Input
                                             id="bidAmount"
@@ -205,7 +209,7 @@ const TaskDetails = () => {
                                             min="1"
                                         />
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 dark:text-white">
                                         <Label htmlFor="bidMessage">Message</Label>
                                         <Textarea
                                             id="bidMessage"
@@ -261,7 +265,7 @@ const TaskDetails = () => {
                             <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Task Actions</h2>
                                 <div className="space-y-3">
-                                    <Button asChild variant="outline" className="w-full">
+                                    <Button asChild variant="" className="w-full">
                                         <Link to={`/edit-task/${task.id}`}>Edit Task</Link>
                                     </Button>
                                     <Button variant="secondary" className="w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600">

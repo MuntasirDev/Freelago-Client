@@ -126,7 +126,7 @@ const AddTask = () => {
                     <div className="mb-10 text-center">
                         <h1 className="text-4xl font-semibold text-gray-900 dark:text-white mb-4">Post a New Task</h1>
                         <p className="text-xl text-gray-600 dark:text-gray-400">
-                            Describe your task and let freelancers bid on it
+                            Describe your task and let freelancers bid on it!
                         </p>
                     </div>
 
@@ -134,8 +134,8 @@ const AddTask = () => {
                     <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 space-y-6 shadow-lg">
                         
                         {/* 1. Task Title */}
-                        <div className="space-y-2">
-                            <Label htmlFor="title">Task Title *</Label>
+                        <div className="space-y-2 dark:text-white">
+                            <Label htmlFor="title">Task Title </Label>
                             <Input
                                 id="title"
                                 placeholder="e.g., Build a responsive website"
@@ -146,8 +146,8 @@ const AddTask = () => {
                         </div>
 
                         {/* 2. Category Select */}
-                        <div className="space-y-2">
-                            <Label htmlFor="category">Category *</Label>
+                        <div className="space-y-2 ">
+                            <Label className="dark:text-white" htmlFor="category">Category </Label>
                             <Select 
                                 value={category} 
                                 onValueChange={setCategory}
@@ -166,8 +166,8 @@ const AddTask = () => {
                         </div>
 
                         {/* 3. Description */}
-                        <div className="space-y-2">
-                            <Label htmlFor="description">Description *</Label>
+                        <div className="space-y-2 dark:text-white">
+                            <Label htmlFor="description">Description </Label>
                             <Textarea
                                 id="description"
                                 placeholder="Describe what needs to be done in detail..."
@@ -184,8 +184,8 @@ const AddTask = () => {
                         {/* 4. Deadline and Budget (Two Columns) */}
                         <div className="grid grid-cols-2 gap-4">
                             {/* Deadline */}
-                            <div className="space-y-2">
-                                <Label htmlFor="deadline">Deadline *</Label>
+                            <div className="space-y-2 dark:text-white">
+                                <Label htmlFor="deadline">Deadline </Label>
                                 <div className="relative">
                                     <Input
                                         id="deadline"
@@ -203,7 +203,7 @@ const AddTask = () => {
                                         <div 
                                             className="absolute inset-0 flex items-center pl-3 pointer-events-none" 
                                         >
-                                            <span className="text-gray-500 dark:text-gray-400">Pick a date</span>
+                                            <span className="text-gray-500 dark:text-white">Pick a date</span>
                                         </div>
                                     )}
                                 </div>
@@ -211,9 +211,9 @@ const AddTask = () => {
 
 
                             {/* Budget */}
-                            <div className="space-y-2">
-                                <Label htmlFor="budget">Budget (USD) *</Label>
-                                <Input
+                            <div className="space-y-2 dark:text-white">
+                                <Label htmlFor="budget">Budget (USD) </Label>
+                                <Input className="dark:text-white"
                                     id="budget"
                                     type="number"
                                     placeholder="e.g., 500"
@@ -233,16 +233,16 @@ const AddTask = () => {
                                 <Input 
                                     value={user.email || ""} 
                                     readOnly 
-                                    className="bg-gray-100 dark:bg-gray-800 cursor-not-allowed" 
+                                    className="bg-gray-100 dark:text-white dark:bg-gray-800 cursor-not-allowed" 
                                 />
                             </div>
                             <div className="space-y-2">
                                 <Label>Your Name</Label>
-                                {/* ✅ UPDATED: dark:bg-gray-700 -> dark:bg-gray-800 for better contrast */}
+                                {/* ✅ UPDATED: dark:bg-gray-700 ->  for better contrast */}
                                 <Input 
                                     value={user.name || ""} 
                                     readOnly 
-                                    className="bg-gray-100 dark:bg-gray-800 cursor-not-allowed" 
+                                    className="bg-gray-100 dark:text-white dark:bg-gray-800 cursor-not-allowed" 
                                 />
                             </div>
                         </div>
@@ -250,8 +250,7 @@ const AddTask = () => {
                         {/* 6. Action Buttons */}
                         <div className="flex gap-4 pt-4">
                             <Button 
-                                type="button" 
-                                variant="outline" // Assuming a standard UI component variant
+                                type="button"
                                 onClick={() => navigate(-1)} 
                                 className="flex-1"
                                 disabled={isLoading} 

@@ -2,11 +2,6 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { Calendar, DollarSign, Users } from "lucide-react";
 
-// **********************************************
-// --- EXPORTED DATA AND UTILITY FUNCTIONS ---
-// **********************************************
-
-// Task Data Exported
 export const initialTasks = [
   {
     id: "task_1",
@@ -91,11 +86,11 @@ export const initialTasks = [
 
 
 /**
- * Simple date formatting (replaces date-fns/format)
+
  * @param {string} dateString
- * @returns {string} Formatted date (e.g., "Dec 06 2025")
+ * @returns {string} 
  */
-export const simpleDateFormat = (dateString) => { // <-- EXPORTED
+export const simpleDateFormat = (dateString) => { 
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return "N/A";
   const options = { month: 'short', day: '2-digit', year: 'numeric' };
@@ -103,7 +98,7 @@ export const simpleDateFormat = (dateString) => { // <-- EXPORTED
 };
 
 
-export const categoryColors = { // <-- EXPORTED
+export const categoryColors = { 
   "Web Development": "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
   "Mobile Development": "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300",
   "Design": "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300",
@@ -114,13 +109,8 @@ export const categoryColors = { // <-- EXPORTED
   "Other": "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
 };
 
-// ক্যাটাগরি লিস্ট ড্রপডাউনের জন্য প্রয়োজন, এটি initialTasks থেকে ডিরাইভ করা হয়েছে
 export const TASK_CATEGORIES = Array.from(new Set(initialTasks.map(task => task.category))); // <-- EXPORTED
 
-
-// **********************************************
-// --- JobCard COMPONENT (DEFAULT EXPORT) ---
-// **********************************************
 const JobCard = ({ task }) => {
   
   const defaultTask = initialTasks[0] || { 
