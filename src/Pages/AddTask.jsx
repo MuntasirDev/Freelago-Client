@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-// Sonner Toast ইম্পোর্ট করা হলো 
 import { toast } from 'sonner'; 
-// Toaster ইম্পোর্ট করা হলো
 import { Toaster } from 'sonner'; 
 
 // --- UI COMPONENT IMPORTS ---
-// UI কম্পোনেন্ট পাথ ঠিক করা হয়েছে
 import Layout from "../Components/UI/Layout"; 
 import { Button } from "../Components/UI/Button";
 import { Input } from "../Components/UI/Input";
@@ -18,10 +15,9 @@ import {
     SelectContent, 
     SelectItem, 
     SelectValue,
-    SelectTrigger // SelectTrigger ইম্পোর্ট করা হয়েছে
+    SelectTrigger 
 } from "../Components/UI/Select";
 
-// ধরে নিলাম এটি একটি আলাদা ফাইল, তাই আপাতত মক ডেটা ব্যবহার করা হলো
 const TASK_CATEGORIES = [
     "Web Development",
     "Mobile Development",
@@ -30,11 +26,8 @@ const TASK_CATEGORIES = [
     "Data Entry",
 ];
 
-// ****************************
 // --- MOCK CONTEXTS (For Demo) ---
-// ****************************
 
-// Auth Context (ব্যবহারকারীর তথ্য)
 const useAuth = () => ({
     user: {
         email: "user@gmail.com", 
@@ -43,7 +36,6 @@ const useAuth = () => ({
     },
 });
 
-// Task Context (ডাটা সাবমিট লজিক)
 const useTasks = () => ({
     addTask: (taskData) => {
         console.log("Mock Task Submission:", taskData);
@@ -52,9 +44,7 @@ const useTasks = () => ({
     },
 });
 
-// ****************************
 // --- ADD TASK COMPONENT ---
-// ****************************
 
 const AddTask = () => {
     const { user } = useAuth();
@@ -63,7 +53,6 @@ const AddTask = () => {
 
     // State
     const [title, setTitle] = useState("");
-    // ✅ FIX: category state-এ একটি প্রাথমিক মান সেট করা হলো (প্রথম ক্যাটাগরি)
     const [category, setCategory] = useState(TASK_CATEGORIES[0] || "");
     const [description, setDescription] = useState("");
     const [deadline, setDeadline] = useState(""); 
@@ -74,8 +63,6 @@ const AddTask = () => {
         e.preventDefault();
 
         // 1. Validation
-        // এখন category state-এ যেহেতু প্রাথমিক মান আছে, তাই Web Development সিলেক্ট করা থাকলে 
-        // এই ভ্যালিডেশনটি আর Fail করবে না।
         if (!title || !category || !description || !deadline || !budget) {
             toast.error("Please fill in all required fields.");
             return;
@@ -113,7 +100,6 @@ const AddTask = () => {
 
             toast.success("Task posted successfully! Redirecting...");
             
-            // simulate successful navigation after a short delay
             setTimeout(() => navigate("/my-tasks"), 500); 
 
         } catch (error) {
@@ -132,7 +118,8 @@ const AddTask = () => {
             {/* Toaster component */}
             <Toaster position="top-right" richColors /> 
             
-            <div className="flex justify-center items-start min-h-[calc(100vh-64px)] py-12 bg-gray-50 dark:bg-gray-900">
+            {/* ✅ UPDATED: bg-gray-50 -> dark:bg-black */}
+            <div className="flex justify-center items-start min-h-[calc(100vh-64px)] py-12 bg-gray-50 dark:bg-black">
                 <div className="max-w-xl w-full p-4">
                     
                     {/* Header Section */}
@@ -143,7 +130,8 @@ const AddTask = () => {
                         </p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 space-y-6 shadow-lg">
+                    {/* ✅ UPDATED: dark:bg-gray-800 -> dark:bg-gray-900, dark:border-gray-700 -> dark:border-gray-800 for better contrast against dark:bg-black */}
+                    <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 space-y-6 shadow-lg">
                         
                         {/* 1. Task Title */}
                         <div className="space-y-2">
@@ -165,9 +153,8 @@ const AddTask = () => {
                                 onValueChange={setCategory}
                             >
                                 <SelectTrigger> 
-                                     {/* SelectValue এখন category state-এর প্রাথমিক মান দেখাবে */}
-                                     <SelectValue placeholder="Select a category" />
-                                 </SelectTrigger>
+                                    <SelectValue placeholder="Select a category" />
+                                </SelectTrigger>
                                 <SelectContent>
                                     {TASK_CATEGORIES.map((cat) => (
                                         <SelectItem key={cat} value={cat}>
@@ -200,23 +187,20 @@ const AddTask = () => {
                             <div className="space-y-2">
                                 <Label htmlFor="deadline">Deadline *</Label>
                                 <div className="relative">
-                                    
                                     <Input
                                         id="deadline"
                                         type="date"
                                         value={deadline}
                                         onChange={(e) => setDeadline(e.target.value)}
                                         min={minDate} 
-                                        // তারিখ নির্বাচন না হওয়া পর্যন্ত টেক্সট লুকানোর জন্য এটি দরকার
                                         className={`appearance-none pr-3 ${ 
                                             !deadline ? 'text-transparent dark:text-transparent' : 'text-gray-900 dark:text-white'
                                         } focus:text-gray-900 dark:focus:text-white`}
                                     />
                                     
-                                    {/* কাস্টম "Pick a date" প্লেসহোল্ডার */}
+                                    {/* Custom "Pick a date" placeholder */}
                                     {!deadline && (
                                         <div 
-                                            // pointer-events-none নিশ্চিত করে যে ক্লিক নিচের ইনপুট এলিমেন্টের কাছে পৌঁছায়।
                                             className="absolute inset-0 flex items-center pl-3 pointer-events-none" 
                                         >
                                             <span className="text-gray-500 dark:text-gray-400">Pick a date</span>
@@ -240,22 +224,25 @@ const AddTask = () => {
                                 />
                             </div>
                         </div>
+                        
                         {/* 5. User Info (Read-Only) */}
-                        <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-gray-800">
                             <div className="space-y-2">
                                 <Label>Your Email</Label>
+                                {/* ✅ UPDATED: dark:bg-gray-700 -> dark:bg-gray-800 for better contrast */}
                                 <Input 
                                     value={user.email || ""} 
                                     readOnly 
-                                    className="bg-gray-100 dark:bg-gray-700 cursor-not-allowed" 
+                                    className="bg-gray-100 dark:bg-gray-800 cursor-not-allowed" 
                                 />
                             </div>
                             <div className="space-y-2">
                                 <Label>Your Name</Label>
+                                {/* ✅ UPDATED: dark:bg-gray-700 -> dark:bg-gray-800 for better contrast */}
                                 <Input 
                                     value={user.name || ""} 
                                     readOnly 
-                                    className="bg-gray-100 dark:bg-gray-700 cursor-not-allowed" 
+                                    className="bg-gray-100 dark:bg-gray-800 cursor-not-allowed" 
                                 />
                             </div>
                         </div>
@@ -264,7 +251,7 @@ const AddTask = () => {
                         <div className="flex gap-4 pt-4">
                             <Button 
                                 type="button" 
-                                variant="" 
+                                variant="outline" // Assuming a standard UI component variant
                                 onClick={() => navigate(-1)} 
                                 className="flex-1"
                                 disabled={isLoading} 

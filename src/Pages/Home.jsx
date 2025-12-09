@@ -66,10 +66,10 @@ const Home = () => {
     const outlineButtonClass = `${baseButtonClass} bg-white dark:bg-gray-800 text-blue-500 dark:text-blue-300 border border-blue-500 hover:bg-gray-100 dark:hover:bg-gray-700`;
 
     return (
-        <div className="min-h-screen bg-background dark:bg-gray-900">
+        <div className="min-h-screen bg-white  dark:bg-black">
             
             {/* Hero Section */}
-            <section className="relative bg-gray-100 dark:bg-gray-800 py-20 lg:py-32 overflow-hidden">
+            <section className="relative bg-gray-100 dark:bg-black py-20 lg:py-32 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                     <div className="max-w-3xl mx-auto text-center">
                         <div className="min-h-[200px] flex flex-col justify-center">
@@ -178,7 +178,7 @@ const Home = () => {
             </section>
 
             {/* How It Works */}
-            <section className="py-16 lg:py-24 bg-gray-100 dark:bg-gray-800">
+            <section className="py-16 lg:py-24 bg-gray-100 dark:bg-black">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">How It Works</h2>

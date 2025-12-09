@@ -7,7 +7,10 @@ const Mainlayouts = () => {
     return (
         <div>
             <Nav></Nav>
-            <Outlet></Outlet>
+            <div className='bg-gray-100 dark:bg-black'>
+<Outlet></Outlet>
+            </div>
+            
             <Footer></Footer>
         </div>
     );
