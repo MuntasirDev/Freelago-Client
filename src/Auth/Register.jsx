@@ -1,45 +1,14 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+// src/pages/Register.jsx
+
+import { useState, useContext } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, User, Image, Loader2, Check, X } from "lucide-react";
 import { Button } from "../Components/UI/Button";
 import { Input } from "../Components/UI/Input";
 import { Label } from "../Components/UI/Label"; 
 import { toast } from "sonner";
 import { FaGoogle } from "react-icons/fa";
-
-const useAuth = () => {
-   
-    const register = async (name, email, password, photoURL) => {
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        if (email && password && name) {
-            
-            console.log("Mock Registration Success:", { name, email, photoURL });
-            return { success: true };
-        }
-        return { success: false, error: "Registration failed due to missing inputs (Mocked)" };
-    };
-
-    const googleLogin = async () => {
-        await new Promise(resolve => setTimeout(resolve, 800));
-       
-        console.log("Mock Google Login Success");
-        return { success: true };
-    };
-
-    
-    const login = async (email, password) => { 
-        await new Promise(resolve => setTimeout(resolve, 800));
-        if (email && password) {
-             console.log("Mock Login Attempt Success");
-             return { success: true };
-        }
-        return { success: false, error: "Missing email or password (Mocked)" };
-    };
-
-    return { register, googleLogin, login };
-};
-
+import { AuthContext } from '../Provider/AuthProvider'; // নিশ্চিত করুন এটি সঠিক পাথ
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -49,9 +18,14 @@ const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     
-   
-    const { register, googleLogin } = useAuth(); 
+    // AuthContext থেকে প্রয়োজনীয় ফাংশন এবং স্টেট নেওয়া হয়েছে
+    const { createUser, googleSignIn, loading, updateUserProfile } = useContext(AuthContext); 
+    
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // PrivateRoute থেকে আসা পূর্ববর্তী পাথটি নেওয়া হচ্ছে
+    const from = location.state?.from || "/"; 
 
     const passwordValidation = {
         hasUppercase: /[A-Z]/.test(password),
@@ -76,28 +50,41 @@ const Register = () => {
 
         setIsLoading(true);
         
-        const result = await register(name, email, password, photoURL);
-        setIsLoading(false);
-
-        if (result.success) {
+        try {
+            // ১. ইউজার তৈরি করা
+            await createUser(email, password);
+            
+            // ২. প্রোফাইল আপডেট করা
+            await updateUserProfile(name, photoURL);
+            
             toast.success("Account created successfully!");
-            navigate("/");
-        } else {
-            toast.error(result.error || "Registration failed");
+            // সফল হলে পূর্বের রুটে নেভিগেট করা
+            navigate(from, { replace: true });
+
+        } catch (error) {
+            console.error("Registration error:", error.message);
+            // Firebase error message দেখাবে
+            toast.error(error.message || "Registration failed"); 
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleGoogleLogin = async () => {
         setIsLoading(true);
-      
-        const result = await googleLogin();
-        setIsLoading(false);
-
-        if (result.success) {
+        try {
+            // Google Sign-In কল করা
+            await googleSignIn(); 
+            
             toast.success("Welcome to FreelaGo!");
-            navigate("/");
-        } else {
-            toast.error(result.error || "Google login failed");
+            // সফল হলে পূর্বের রুটে নেভিগেট করা
+            navigate(from, { replace: true });
+            
+        } catch (error) {
+            console.error("Google login error:", error.message);
+            toast.error(error.message || "Google login failed");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -126,7 +113,7 @@ const Register = () => {
                     <div className="text-center mb-8">
                         <Link to="/" className="inline-flex items-center gap-2 mb-6">
                         
-             
+                        
                         <span className="text-xl font-bold text-gray-900 dark:text-white"> <span className="text-blue-500 ultra-regular font-extrabold text-4xl">F</span>reelaGo</span>
                     
                         </Link>
@@ -135,7 +122,7 @@ const Register = () => {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                       
+                        
                         <div className="space-y-2">
                             <Label htmlFor="name">Full Name *</Label>
                             <div className="relative">
@@ -148,11 +135,12 @@ const Register = () => {
                                     onChange={(e) => setName(e.target.value)}
                                     className="pl-10"
                                     required
+                                    disabled={isLoading || loading}
                                 />
                             </div>
                         </div>
 
-                       
+                        
                         <div className="space-y-2">
                             <Label htmlFor="email">Email *</Label>
                             <div className="relative">
@@ -165,6 +153,7 @@ const Register = () => {
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="pl-10"
                                     required
+                                    disabled={isLoading || loading}
                                 />
                             </div>
                         </div>
@@ -181,11 +170,12 @@ const Register = () => {
                                     value={photoURL}
                                     onChange={(e) => setPhotoURL(e.target.value)}
                                     className="pl-10"
+                                    disabled={isLoading || loading}
                                 />
                             </div>
                         </div>
 
-                       
+                        
                         <div className="space-y-2">
                             <Label htmlFor="password">Password *</Label>
                             <div className="relative">
@@ -198,11 +188,13 @@ const Register = () => {
                                     onChange={(e) => setPassword(e.target.value)}
                                     className="pl-10 pr-10"
                                     required
+                                    disabled={isLoading || loading}
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                    disabled={isLoading || loading}
                                 >
                                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                 </button>
@@ -217,8 +209,13 @@ const Register = () => {
                         </div>
 
 
-                        <Button type="submit" className="w-full" size="lg" disabled={isLoading || !isPasswordValid}>
-                            {isLoading ? (
+                        <Button 
+                            type="submit" 
+                            className="w-full" 
+                            size="lg" 
+                            disabled={isLoading || loading || !isPasswordValid}
+                        >
+                            {(isLoading || loading) ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                     Creating account...
@@ -231,20 +228,21 @@ const Register = () => {
 
                     
                     <div className="relative my-6">
-                                              <div class="relative flex items-center my-4">
-  <div class="grow border-t"></div>
-  <span class="px-3 text-sm text-muted-foreground bg-background">
-    Or continue with
-  </span>
-  <div class="grow border-t"></div>
-</div>
+                        <div className="relative flex items-center my-4">
+                            <div className="grow border-t"></div>
+                            <span className="px-3 text-sm text-muted-foreground bg-background">
+                                Or continue with
+                            </span>
+                            <div className="grow border-t"></div>
+                        </div>
 
                     </div>
 
                     
                     <Button 
-                        
+                        onClick={handleGoogleLogin} 
                         className="flex items-center justify-center gap-2 w-full shadow-lg"
+                        disabled={isLoading || loading}
                     > 
                         
                         <FaGoogle className="h-5 w-5 " />

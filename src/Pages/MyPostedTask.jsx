@@ -254,10 +254,10 @@ const MyPostedTasks = () => {
 
                 {/* Delete Confirmation Modal */}
                 <dialog className={`modal ${deleteModalOpen ? "modal-open" : ""}`}>
-                    <div className="modal-box">
+                    <div className="modal-box dark:text-white dark:bg-black">
                         <h3 className="font-bold text-lg">Delete Task</h3>
                         <p className="py-4">
-                            Are you sure you want to delete **"{taskToDelete?.title}"**? This action cannot be undone.
+                            Are you sure you want to delete {taskToDelete?.title} ? This action cannot be undone.
                         </p>
                         <div className="modal-action">
                             <button className="btn" onClick={() => setDeleteModalOpen(false)}>
@@ -279,3 +279,4 @@ const MyPostedTasks = () => {
 };
 
 export default MyPostedTasks;
+
