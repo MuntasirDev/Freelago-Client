@@ -13,7 +13,7 @@ const categoryColors = {
     "Web Development": "badge-primary",
     "Mobile Development": "badge-secondary",
     "Graphic Design": "badge-accent", 
-    "Writing & Translation": "badge-info", 
+    "Writing & Translation": "badge-neutral", 
     "Data Entry": "badge-warning",
     "Video Editing": "badge-error",
     "Other": "badge-neutral",
@@ -77,13 +77,7 @@ const MyPostedTasks = () => {
             // const DELETE_API_URL = `http://localhost:3000/task/${taskToDelete.id}`;
             
             try {
-                // const response = await fetch(DELETE_API_URL, { method: 'DELETE' });
-                
-                // if (!response.ok) {
-                //     throw new Error(`Failed to delete task: ${response.status}`);
-                // }
-                
-                // --- Mock Deletion Success (Replace with actual API response handling) ---
+               
                 await new Promise(resolve => setTimeout(resolve, 500)); 
                 
                 setMyTasks(prevTasks => prevTasks.filter(task => task.id !== taskToDelete.id));
@@ -139,7 +133,7 @@ const MyPostedTasks = () => {
                         <h1 className="text-3xl font-bold mb-2">My Posted Tasks</h1>
                         <p className="text-base-content/70 dark:text-gray-400">
                             Manage all the tasks you've posted
-                            <span className="ml-2 font-semibold text-primary dark:text-blue-400">({user.email})</span>
+                            
                         </p>
                     </div>
                     {/* Post New Task Button */}
@@ -176,7 +170,7 @@ const MyPostedTasks = () => {
                                         {/* Header */}
                                         <div className="flex justify-between items-start">
                                             <h2 className="card-title text-xl font-bold max-w-[80%]">{task.title}</h2>
-                                            <span className={`badge ${categoryColors[task.category] || "badge-neutral"}`}>{task.category}</span>
+                                            <span className={`badge p-5 text-white font-bold text-xs  ${categoryColors[task.category] || "badge-neutral"} `}>{task.category}</span>
                                         </div>
 
                                         {/* Details */}

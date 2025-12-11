@@ -17,6 +17,8 @@ import Login from '../Auth/Login';
 import Register from '../Auth/Register';
 import PrivateRoute from '../Provider/PrivateRoute'; 
 import { initialTasks } from '../Components/JobCard'; 
+import MyProfile from '../Pages/MyProfile';
+
 
 // --- Loader Functions ---
 
@@ -129,6 +131,14 @@ export const router = createBrowserRouter([
                 element: <PrivateRoute><TaskDetails /></PrivateRoute>,
                 loader: taskDetailsLoader, // Loader attached
             },
+            {
+                path:""
+
+            },
+            {
+                path: "/profile",
+                element: <PrivateRoute><MyProfile /></PrivateRoute>
+            }
         ],
     },
     
