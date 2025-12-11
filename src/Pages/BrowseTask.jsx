@@ -1,8 +1,9 @@
+// src/Pages/BrowseTasks.jsx (Complete Code - Modified with FIX)
+
 import { useState, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLoaderData, useSearchParams } from "react-router-dom"; 
 import { Search, Filter, X } from "lucide-react";
 
-// Assuming these are custom/shadcn UI components
 import { Button } from "../Components/UI/Button"; 
 import { Input } from "../Components/UI/Input"; 
 import { Select, SelectContent, SelectItem } from "../Components/UI/Select"; 
@@ -11,15 +12,32 @@ import { SelectTrigger, SelectValue } from "../Components/UI/Select";
 import Layout from "../Components/UI/Layout"; 
 import LoadingSpinner from "../Components/UI/LoadinSpinner"; 
 
-import JobCard, {
-    initialTasks,
-    TASK_CATEGORIES,
-} from "../Components/JobCard";
+import JobCard, { TASK_CATEGORIES, initialTasks } from "../Components/JobCard"; 
 
 const BrowseTasks = () => {
-    // Mock data and state to simulate a loaded component
-    const tasks = initialTasks;
-    const isLoading = false;
+    // 💡 লোডার থেকে আসা ডেটা গ্রহণ করা হলো
+    const tasksFromLoader = useLoaderData();
+
+    // 💡 FIX: লোডার ডেটা (MongoDB/সার্ভার থেকে) নমনীয়ভাবে গ্রহণ করা হলো
+    let loadedTasks = [];
+
+    if (Array.isArray(tasksFromLoader)) {
+        // Case 1: Loader directly returned an array of tasks (যেমন: return [task1, task2, ...])
+        loadedTasks = tasksFromLoader;
+    } else if (tasksFromLoader && Array.isArray(tasksFromLoader.tasks?.data)) {
+        // Case 2: Loader returned an object with a nested tasks.data property 
+        loadedTasks = tasksFromLoader.tasks.data;
+    } else if (tasksFromLoader && Array.isArray(tasksFromLoader.data)) {
+        // Case 3: Loader returned an object with a nested data property
+        loadedTasks = tasksFromLoader.data;
+    }
+        
+    // 💡 আসল টাস্কগুলোকে প্রথমে দেখানো হবে, তারপর ডামি টাস্কগুলো।
+    // Note: এটি শুধুমাত্র মক করার জন্য, প্রোডাকশনে ডামি ডেটা বাদ দিয়ে শুধু আসল ডেটা ব্যবহার করা উচিত।
+    const allTasks = [...loadedTasks, ...initialTasks];
+
+    // Home.jsx এর মতো isLoading এখন মক করা হচ্ছে
+    const isLoading = false; 
     
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
@@ -27,9 +45,10 @@ const BrowseTasks = () => {
     const [sortBy, setSortBy] = useState("deadline");
 
     const filteredTasks = useMemo(() => {
-        let result = [...tasks];
+        // 💡 filter/sort করার জন্য allTasks ব্যবহার করা হচ্ছে
+        let result = [...allTasks]; 
 
-        // Filtering by search query (title or description)
+        // 1. Filtering by search query (title or description)
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
             result = result.filter(
@@ -39,31 +58,35 @@ const BrowseTasks = () => {
             );
         }
 
-        // Filtering by category
+        // 2. Filtering by category
         if (selectedCategory && selectedCategory !== "all") {
             result = result.filter((task) => task.category === selectedCategory);
         }
 
-        // Sorting
+        // 3. Sorting (Always sort by the chosen criteria)
         switch (sortBy) {
             case "deadline":
+                // Sort by deadline (Soonest first)
                 result.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
                 break;
             case "budget-high":
+                // Sort by budget (Highest first)
                 result.sort((a, b) => b.budget - a.budget);
                 break;
             case "budget-low":
+                // Sort by budget (Lowest first)
                 result.sort((a, b) => a.budget - b.budget);
                 break;
             case "newest":
-                result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                // Sort by creation date (Newest first) - assuming 'createdAt' exists for real tasks
+                result.sort((a, b) => new Date(b.createdAt || a.id).getTime() - new Date(a.createdAt || b.id).getTime());
                 break;
             default:
                 break;
         }
 
         return result;
-    }, [tasks, searchQuery, selectedCategory, sortBy]);
+    }, [allTasks, searchQuery, selectedCategory, sortBy]); 
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -83,23 +106,22 @@ const BrowseTasks = () => {
         setSearchParams({});
     };
 
-    // Check if any filter is active for the "Clear" button
     const hasActiveFilters = searchQuery || selectedCategory !== "all";
 
     return (
         <Layout>
-            <div className="container-custom mx-auto max-w-7xl px-4 py-8 bg-white  dark:bg-black">
+            <div className="container-custom mx-auto max-w-7xl px-4 py-8 bg-white dark:bg-black">
                 
                 {/* Header Section */}
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold dark:text-white text-gray-900 mb-2">Browse Tasks</h1>
-                    <p className="text-gray-600">
-                        Find the perfect task that matches your skills and interests
+                    <p className="text-gray-600 dark:text-gray-400">
+                        Find the perfect task that matches your skills and interests. Total Tasks Available: {allTasks.length}
                     </p>
                 </div>
 
                 {/* Filters/Search Bar */}
-                <div className="bg-white rounded-xl border border-gray-200 p-4 mb-8">
+                <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 mb-8">
                     <form onSubmit={handleSearch} className="flex flex-col lg:flex-row gap-4 items-center">
                         <div className="flex-1 relative w-full">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -108,7 +130,7 @@ const BrowseTasks = () => {
                                 placeholder="Search tasks by title or description..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-10"
+                                className="pl-10 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                             />
                         </div>
 
@@ -117,10 +139,10 @@ const BrowseTasks = () => {
                             <SelectTrigger className="w-full lg:w-[200px]">
                                 <SelectValue placeholder="Category" />
                             </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">All Categories</SelectItem>
+                            <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
+                                <SelectItem value="all" className="dark:text-white">All Categories</SelectItem>
                                 {TASK_CATEGORIES.map((category) => (
-                                    <SelectItem key={category} value={category}>
+                                    <SelectItem key={category} value={category} className="dark:text-white">
                                         {category}
                                     </SelectItem>
                                 ))}
@@ -132,11 +154,11 @@ const BrowseTasks = () => {
                             <SelectTrigger className="w-full lg:w-[180px]">
                                 <SelectValue placeholder="Sort by" />
                             </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="deadline">Deadline (Soonest)</SelectItem>
-                                <SelectItem value="newest">Newest First</SelectItem>
-                                <SelectItem value="budget-high">Budget (High to Low)</SelectItem>
-                                <SelectItem value="budget-low">Budget (Low to High)</SelectItem>
+                            <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
+                                <SelectItem value="deadline" className="dark:text-white">Deadline (Soonest)</SelectItem>
+                                <SelectItem value="newest" className="dark:text-white">Newest First</SelectItem>
+                                <SelectItem value="budget-high" className="dark:text-white">Budget (High to Low)</SelectItem>
+                                <SelectItem value="budget-low" className="dark:text-white">Budget (Low to High)</SelectItem>
                             </SelectContent>
                         </Select>
 
@@ -146,7 +168,7 @@ const BrowseTasks = () => {
                         </Button>
 
                         {hasActiveFilters && (
-                            <Button type="button" variant="ghost" onClick={clearFilters} className="w-full lg:w-auto">
+                            <Button type="button" variant="ghost" onClick={clearFilters} className="w-full lg:w-auto dark:text-white dark:hover:bg-gray-800">
                                 <X className="mr-2 h-4 w-4" />
                                 Clear
                             </Button>
@@ -160,15 +182,13 @@ const BrowseTasks = () => {
                         <LoadingSpinner text="Loading tasks..." />
                     </div>
                 ) : filteredTasks.length === 0 ? (
-                    <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
-                        <div className="h-24 w-24 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
-                            <Search className="h-12 w-12 text-gray-500" />
+                    <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+                        <div className="h-24 w-24 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mx-auto mb-4">
+                            <Search className="h-12 w-12 text-gray-500 dark:text-gray-400" />
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">No tasks found</h3>
-                        <p className="text-gray-600 mb-4">
-                            {hasActiveFilters
-                                ? "Try adjusting your filters or search query"
-                                : "There are no tasks available at the moment"}
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No tasks found</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">
+                            Try adjusting your filters or search query
                         </p>
                         {hasActiveFilters && (
                             <Button onClick={clearFilters}>

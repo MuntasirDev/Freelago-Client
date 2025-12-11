@@ -1,8 +1,11 @@
+// src/Pages/TaskDetails.jsx (Complete Code - Updated for Loader Data)
+
 import { useState, useContext, createContext } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+// 💡 useLoaderData ইমপোর্ট করা হলো
+import { useParams, useNavigate, Link, useLoaderData } from "react-router-dom"; 
 import { Calendar, DollarSign, Mail, Clock, Users, ArrowLeft, Loader2 } from "lucide-react";
 import { format } from "date-fns"; 
-import { toast, Toaster } from "sonner"; // 💡 Toaster ইম্পোর্ট করা হলো 
+import { toast, Toaster } from "sonner"; 
 import { Button } from "../Components/UI/Button"; 
 import { Input } from "../Components/UI/Input"; 
 import { Label } from "../Components/UI/Label"; 
@@ -10,35 +13,31 @@ import Layout from "../Components/UI/Layout";
 import LoadingSpinner from "../Components/UI/LoadinSpinner"; 
 import { Badge } from "../Components/UI/Badge";
 import { Textarea } from "../Components/UI/Textarea";
-import { initialTasks, categoryColors } from "../Components/JobCard"; 
+// 💡 initialTasks আর দরকার নেই, কারণ ডেটা লোডার থেকে আসছে
+import { categoryColors } from "../Components/JobCard"; 
 
+// --- DUMMY CONTEXTS (For mocking bid functionality) ---
 const TaskContext = createContext(null);
-
-// *** Mock Contexts (Omitted for brevity, assuming they are working) ***
 const useTasks = () => {
-    // ... (unchanged logic) ...
-    const [tasks, setTasks] = useState(initialTasks);
-    const [isLoading, setIsLoading] = useState(false);
+    // 💡 এখানে আসল tasks ডেটা আর স্টেট হিসেবে রাখার দরকার নেই।
+    // আমরা শুধু mock incrementBidCount ফাংশন রাখব।
 
-    const getTaskById = (id) => {
-        return tasks.find(task => task.id === id);
-    };
-
+    // Note: Production-এ, এই incrementBidCount ফাংশনটি একটি API কল করবে।
     const incrementBidCount = (taskId) => {
-        setTasks(prevTasks =>
-            prevTasks.map(task =>
-                task.id === taskId ? { ...task, bidsCount: task.bidsCount + 1 } : task
-            )
-        );
+        // Mocking: In a real app, this would update the backend/MongoDB
+        console.log(`Mock: Bid count incremented for task ${taskId}`);
     };
 
-    return { getTaskById, incrementBidCount, isLoading };
+    // isLoading এখন রাউটার দ্বারা হ্যান্ডেল হবে, তাই এটিকে সবসময় false রাখলাম
+    const isLoading = false; 
+    
+    // 💡 getTaskById আর দরকার নেই, কারণ ডেটা লোডার থেকে আসছে।
+    return { incrementBidCount, isLoading }; 
 };
 
 const AuthContext = createContext(null);
-
 const useAuth = () => {
-
+    // 💡 Mock User
     const user = { 
         id: "user_bidder_1", 
         name: "Freelancer Pro",
@@ -48,34 +47,32 @@ const useAuth = () => {
 };
 
 
+// --- TaskDetails Component (Main Update Here) ---
 const TaskDetails = () => {
-    const { id } = useParams();
+    // 💡 লোডার থেকে টাস্ক ডেটা গ্রহণ করা হলো
+    const task = useLoaderData(); 
+    
+    const { id } = useParams(); // URL ID এখনও ব্যবহার করা যেতে পারে
     const navigate = useNavigate();
     const { user } = useAuth();
-    const { getTaskById, incrementBidCount, isLoading } = useTasks();
+    // 💡 useTasks থেকে শুধু incrementBidCount নেওয়া হলো
+    const { incrementBidCount, isLoading } = useTasks(); 
 
     const [bidAmount, setBidAmount] = useState("");
     const [bidMessage, setBidMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-    // Note: userBidsCount should ideally come from a context/API, mocking here.
+    
+    // 💡 BidsCount State ব্যবহার না করে, আমরা task.bidsCount কে কাজে লাগাব
+    const [currentBidsCount, setCurrentBidsCount] = useState(task?.bidsCount || 0);
+
+    // 💡 Mock user bids count (separate state, not task data)
     const [userBidsCount, setUserBidsCount] = useState(3); 
 
-    const task = getTaskById(id || ""); 
-
-    if (isLoading) {
-        return (
-            <Layout>
-                <div className="container mx-auto py-12">
-                    <LoadingSpinner text="Loading task details..." />
-                </div>
-            </Layout>
-        );
-    }
-
+    // 💡 লোডার ডেটা null বা undefined হলে 404 হ্যান্ডেল
     if (!task) {
         return (
             <Layout>
-                {/* 💡 Toaster এখানে বা App.jsx এ থাকতে পারে */}
+                
                 <Toaster position="top-right" richColors /> 
                 <div className="container mx-auto py-12 text-center">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Task Not Found</h2>
@@ -90,6 +87,7 @@ const TaskDetails = () => {
         );
     }
 
+    // 💡 যেহেতু ডেডলাইন বা বাজেট ডাটাবেস থেকে আসছে, তাই সেগুলো ব্যবহার করা হলো
     const daysUntilDeadline = Math.ceil(
         (new Date(task.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
     );
@@ -109,29 +107,35 @@ const TaskDetails = () => {
 
         setIsSubmitting(true);
 
-        // Simulate API call
+        // 💡 এখানে আসল API কল হবে নতুন Bid জমা দেওয়ার জন্য (PUT/PATCH to update bids array)
         await new Promise((resolve) => setTimeout(resolve, 1000));
-
+        
+        // Mocking Bid Submission Success
         incrementBidCount(task.id);
+        setCurrentBidsCount((prev) => prev + 1); // Locally update bid count
         setUserBidsCount((prev) => prev + 1);
         setBidAmount("");
         setBidMessage("");
         setIsSubmitting(false);
 
-        // ✅ এই কলটি এখন কাজ করবে
+        
         toast.success("Your bid has been submitted!");
     };
 
+    // 💡 লোডিং স্টেট removed, কারণ রাউটার লোডিং শেষ হওয়ার পরই এই কম্পোনেন্ট রেন্ডার করবে
+    // যদি আপনি loading UI দেখাতে চান, তাহলে route এর `defer` বা `state` ব্যবহার করতে হবে, যা এই স্কোপের বাইরে।
+
+
     return (
         <Layout>
-            {/* 💡 FIX: Toaster কম্পোনেন্টটি এখানে যুক্ত করা হয়েছে */}
+            
             <Toaster position="top-right" richColors /> 
 
             <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 max-w-7xl">
 
 <Button 
     onClick={() => navigate(-1)} 
-    // Remove 'variant="outline"' to use the default solid style
+    
     className="flex items-center mb-6 bg-blue-500 text-white border-none shadow-md" 
 >
     <ArrowLeft className="mr-2 h-4 w-4" />
@@ -150,6 +154,7 @@ const TaskDetails = () => {
                     <div className="lg:col-span-2 space-y-6">
                         <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                             <div className="flex items-start justify-between mb-4">
+                                {/* 💡 task.category ব্যবহার করা হলো */}
                                 <Badge className={categoryColors[task.category] || categoryColors["Other"]}>
                                     {task.category}
                                 </Badge>
@@ -165,12 +170,13 @@ const TaskDetails = () => {
                             <div className="flex flex-wrap gap-4 mb-6">
                                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                                     <DollarSign className="h-5 w-5 text-green-500" />
-                                    <span className="font-semibold text-gray-900 dark:text-white">{task.budget}</span>
+                                    {/* 💡 task.budget ব্যবহার করা হলো */}
+                                    <span className="font-semibold text-gray-900 dark:text-white">${task.budget}</span> 
                                     <span>Budget</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                                     <Calendar className="h-5 w-5 text-blue-500" />
-                                    {/* 🎯 date-fns.format ব্যবহার */}
+                                    {/* 💡 task.deadline ব্যবহার করা হলো */}
                                     <span>{format(new Date(task.deadline), "MMM dd, yyyy")}</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
@@ -183,12 +189,14 @@ const TaskDetails = () => {
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                                     <Users className="h-5 w-5 text-purple-500" />
-                                    <span>{task.bidsCount} bids</span>
+                                    {/* 💡 currentBidsCount state ব্যবহার করা হলো */}
+                                    <span>{currentBidsCount} bids</span> 
                                 </div>
                             </div>
 
                             <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
                                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Description</h2>
+                                {/* 💡 task.description ব্যবহার করা হলো */}
                                 <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">{task.description}</p>
                             </div>
                         </div>
@@ -240,7 +248,8 @@ const TaskDetails = () => {
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
                                     <span className="text-lg font-medium text-blue-700 dark:text-blue-300">
-                                        {task.userName.charAt(0).toUpperCase()}
+                                        {/* 💡 task.userName ব্যবহার করা হলো */}
+                                        {task.userName.charAt(0).toUpperCase()} 
                                     </span>
                                 </div>
                                 <div>
@@ -251,11 +260,13 @@ const TaskDetails = () => {
                             <div className="space-y-2 text-sm">
                                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                                     <Mail className="h-4 w-4" />
-                                    <span>{task.userEmail}</span>
+                                    {/* 💡 task.userEmail ব্যবহার করা হলো */}
+                                    <span>{task.userEmail}</span> 
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                                     <Clock className="h-4 w-4" />
                                     
+                                    {/* 💡 task.createdAt ব্যবহার করা হলো */}
                                     <span>Posted {format(new Date(task.createdAt), "MMM dd, yyyy")}</span>
                                 </div>
                             </div>
@@ -269,7 +280,7 @@ const TaskDetails = () => {
                                         <Link to={`/edit-task/${task.id}`}>Edit Task</Link>
                                     </Button>
                                     <Button variant="secondary" className="w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600">
-                                        View Bids ({task.bidsCount})
+                                        View Bids ({currentBidsCount})
                                     </Button>
                                 </div>
                             </div>

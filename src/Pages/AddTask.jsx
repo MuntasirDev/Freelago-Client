@@ -1,8 +1,8 @@
+// src/Pages/AddTask.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import { toast } from 'sonner'; 
-import { Toaster } from 'sonner'; 
+import { toast, Toaster } from 'sonner'; 
 import Layout from "../Components/UI/Layout"; 
 import { Button } from "../Components/UI/Button";
 import { Input } from "../Components/UI/Input";
@@ -25,7 +25,7 @@ const TASK_CATEGORIES = [
 ];
 
 // --- MOCK CONTEXTS (For Demo) ---
-
+// NOTE: Replace this with your actual AuthContext hook
 const useAuth = () => ({
     user: {
         email: "user@gmail.com", 
@@ -34,19 +34,31 @@ const useAuth = () => ({
     },
 });
 
-const useTasks = () => ({
-    addTask: (taskData) => {
-        console.log("Mock Task Submission:", taskData);
-        // Simulate successful async operation
-        return new Promise(resolve => setTimeout(resolve, 1500)); 
-    },
-});
+// --- API Function ---
+const postTaskToDatabase = async (taskData) => {
+    const URL = 'http://localhost:3000/task'; // MUST match your server URL
+    
+    const response = await fetch(URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(taskData),
+    });
+
+    if (!response.ok) {
+        // Attempt to parse error message from server
+        const errorText = await response.text();
+        throw new Error(`Failed to post task. Server responded with status ${response.status}. Message: ${errorText}`);
+    }
+
+    return response.json();
+};
 
 // --- ADD TASK COMPONENT ---
 
 const AddTask = () => {
     const { user } = useAuth();
-    const { addTask } = useTasks();
     const navigate = useNavigate();
 
     // State
@@ -85,24 +97,29 @@ const AddTask = () => {
         setIsLoading(true);
 
         try {
-            await addTask({
+            const taskData = {
                 title,
                 category,
                 description,
-                deadline: deadlineDate.toISOString(), 
-                budget: parsedBudget,
+                // Format deadline for ISO 8601 standard for storage
+                deadline: deadlineDate.toISOString().split('T')[0], 
+                budget: parsedBudget, // Send as number
                 userEmail: user.email,
                 userName: user.name,
                 userId: user.id,
-            });
+            };
+            
+            // 💡 Call the real API endpoint
+            await postTaskToDatabase(taskData); 
 
             toast.success("Task posted successfully! Redirecting...");
             
+            // Redirect to My Tasks (or /browse-tasks if preferred)
             setTimeout(() => navigate("/my-tasks"), 500); 
 
         } catch (error) {
             console.error("Task submission error:", error);
-            toast.error("Failed to post task. Please try again.");
+            toast.error("Failed to post task. Please try again. Check console.");
         } finally {
             setIsLoading(false);
         }
@@ -116,7 +133,6 @@ const AddTask = () => {
             {/* Toaster component */}
             <Toaster position="top-right" richColors /> 
             
-            {/* ✅ UPDATED: bg-gray-50 -> dark:bg-black */}
             <div className="flex justify-center items-start min-h-[calc(100vh-64px)] py-12 bg-gray-50 dark:bg-black">
                 <div className="max-w-xl w-full p-4">
                     
@@ -128,7 +144,6 @@ const AddTask = () => {
                         </p>
                     </div>
 
-                    {/* ✅ UPDATED: dark:bg-gray-800 -> dark:bg-gray-900, dark:border-gray-700 -> dark:border-gray-800 for better contrast against dark:bg-black */}
                     <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 space-y-6 shadow-lg">
                         
                         {/* 1. Task Title */}
@@ -227,7 +242,6 @@ const AddTask = () => {
                         <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-gray-800">
                             <div className="space-y-2">
                                 <Label>Your Email</Label>
-                                {/* ✅ UPDATED: dark:bg-gray-700 -> dark:bg-gray-800 for better contrast */}
                                 <Input 
                                     value={user.email || ""} 
                                     readOnly 
@@ -236,7 +250,6 @@ const AddTask = () => {
                             </div>
                             <div className="space-y-2">
                                 <Label>Your Name</Label>
-                                {/* ✅ UPDATED: dark:bg-gray-700 ->  for better contrast */}
                                 <Input 
                                     value={user.name || ""} 
                                     readOnly 

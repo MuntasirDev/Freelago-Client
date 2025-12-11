@@ -1,13 +1,8 @@
-// src/Components/Nav.jsx (FINAL)
-
 import { useState, useEffect, useContext } from "react"; 
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Sun, Moon, LogOut, User, Loader2 } from "lucide-react"; 
 import { AuthContext } from '../Provider/AuthProvider'; // ⭐ Firebase Auth Context ইম্পোর্ট করা হলো
 
-// ⭐ মক Auth লজিক সম্পূর্ণভাবে সরিয়ে দেওয়া হলো
-
-// স্টাইল কনস্ট্যান্টস (অপরিবর্তিত)
 const baseButtonStyle = "px-3 py-1 text-sm font-medium transition-colors cursor-pointer rounded-lg";
 const primaryButtonStyle = "bg-blue-500 hover:bg-blue-600 text-white shadow-md";
 const secondaryButtonStyle = "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white";
@@ -16,10 +11,10 @@ const iconButtonStyle = "p-2 rounded-lg bg-white dark:bg-gray-800 text-gray-800 
 const Nav = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     
-    // ⭐ Auth Hook: useContext ব্যবহার করে আসল Firebase স্টেট নেওয়া হলো
+    
     const { user, logOut, loading } = useContext(AuthContext); 
     
-    // Theme Logic (অপরিবর্তিত)
+    
     const [theme, setTheme] = useState(() => {
         const stored = localStorage.getItem("freelago_theme");
         return (stored === "dark" ? "dark" : "light");
@@ -40,10 +35,10 @@ const Nav = () => {
     
     const navigate = useNavigate();
     
-    // ⭐ আসল logOut ফাংশন ব্যবহার করা হলো
+    
     const handleLogout = async () => { 
         try {
-            await logOut(); // AuthContext থেকে আসা logOut ফাংশন
+            await logOut(); 
             navigate("/");
             setIsMenuOpen(false);
         } catch (error) {
@@ -51,7 +46,7 @@ const Nav = () => {
         }
     };
 
-    // নেভিগেশন লিঙ্ক লজিক
+    
     const baseLinks = [
         { to: "/", label: "Home" },
     ];
@@ -62,8 +57,7 @@ const Nav = () => {
         { to: "/my-tasks", label: "My Posted Tasks" }
     ];
 
-    // user লগইন করা থাকলে protectedLinks যোগ করা হবে
-    // loading অবস্থায় শুধু baseLinks রেন্ডার হবে বা লোডিং স্পিনার দেখানো যেতে পারে
+    
     const navLinks = (user && !loading) ? [...baseLinks, ...protectedLinks] : baseLinks;
 
     return (
@@ -71,14 +65,14 @@ const Nav = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                     
-                    {/* Logo/Brand (অপরিবর্তিত) */}
+                  
                     <Link to="/" className="flex items-center gap-2">
                         <span className="text-xl font-bold text-gray-900 dark:text-white"> 
                             <span className="text-blue-500 ultra-regular font-extrabold text-4xl">F</span>reelaGo
                         </span>
                     </Link>
 
-                    {/* Desktop Navigation Links (Conditional Rendering) */}
+                   
                     <nav className="hidden md:flex items-center gap-6">
                         {(loading) ? ( 
                             <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
@@ -95,10 +89,10 @@ const Nav = () => {
                         )}
                     </nav>
 
-                    {/* Desktop Auth & Theme */}
+                    
                     <div className="hidden md:flex items-center gap-3">
                         
-                        {/* Theme Toggle (অপরিবর্তিত) */}
+                        
                         <button
                             onClick={toggleTheme}
                             className={iconButtonStyle}
@@ -111,10 +105,10 @@ const Nav = () => {
                             )}
                         </button>
 
-                        {/* Auth Buttons */}
-                        {loading ? ( // লোডিং স্পিনার
+                        
+                        {loading ? ( 
                             <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
-                        ) : user ? ( // ইউজার লগইন করা
+                        ) : user ? ( 
                             <div className="flex items-center gap-3">
                                 
                                 <Link to="/profile" title={user.displayName || 'User Profile'}>
@@ -129,7 +123,7 @@ const Nav = () => {
                                     Log Out
                                 </button>
                             </div>
-                        ) : ( // ইউজার লগআউট করা
+                        ) : ( 
                             <div className="flex items-center gap-2">
                                 
                                 <Link 
