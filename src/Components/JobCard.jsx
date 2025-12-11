@@ -9,36 +9,35 @@ export const initialTasks = [
     category: "Web Development",
     description: "Looking for a skilled developer to create a modern, responsive landing page for my startup. Must include animations and be mobile-friendly.",
     deadline: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-    budget: 500,
-    userEmail: "john@example.com",
-    userName: "John Doe",
+    budget: 650,
+    userEmail: "Hossainaftakhil2000@gmail.com",
+    userName: "Aftakhil Hossain",
     userId: "user_demo_1",
     createdAt: new Date().toISOString(),
     bidsCount: 12,
   },
-  // ... (বাকি initialTasks ডেটা) ...
   {
     id: "task_2",
     title: "Logo Design for Tech Startup",
     category: "Design",
     description: "Need a creative logo design for a new AI-focused tech startup. Looking for something modern and memorable.",
     deadline: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-    budget: 200,
-    userEmail: "sarah@example.com",
-    userName: "Sarah Smith",
+    budget: 60,
+    userEmail: "mahmimmainul@gmail.com",
+    userName: "Mainul Mahim",
     userId: "user_demo_2",
     createdAt: new Date().toISOString(),
     bidsCount: 8,
   },
-    {
+    {
     id: "task_3",
     title: "Write SEO Blog Articles",
     category: "Writing",
     description: "Need 10 SEO-optimized blog articles about digital marketing. Each article should be 1500+ words.",
     deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-    budget: 800,
-    userEmail: "mike@example.com",
-    userName: "Mike Johnson",
+    budget: 250,
+    userEmail: "Riyadjillu@gmail.com",
+    userName: "jillur Rahman",
     userId: "user_demo_3",
     createdAt: new Date().toISOString(),
     bidsCount: 15,
@@ -49,9 +48,9 @@ export const initialTasks = [
     category: "Marketing",
     description: "Looking for a marketing expert to run a 30-day social media campaign across Instagram and TikTok.",
     deadline: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-    budget: 1200,
-    userEmail: "emma@example.com",
-    userName: "Emma Wilson",
+    budget: 200,
+    userEmail: "salauddinmahi@gmail.com",
+    userName: "Salauddin Mahi",
     userId: "user_demo_4",
     createdAt: new Date().toISOString(),
     bidsCount: 6,
@@ -62,9 +61,9 @@ export const initialTasks = [
     category: "Design",
     description: "Need complete UI/UX design for a fitness tracking mobile app. Including wireframes and final designs.",
     deadline: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
-    budget: 1500,
-    userEmail: "alex@example.com",
-    userName: "Alex Brown",
+    budget: 500,
+    userEmail: "tasbir1206@gmail.com",
+    userName: "Tasbir Ahmed",
     userId: "user_demo_5",
     createdAt: new Date().toISOString(),
     bidsCount: 20,
@@ -76,8 +75,8 @@ export const initialTasks = [
     description: "Need help entering 500 products into our e-commerce platform. Each product has images, descriptions, and prices.",
     deadline: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
     budget: 150,
-    userEmail: "lisa@example.com",
-    userName: "Lisa Chen",
+    userEmail: "kabirnabil@gmail.com",
+    userName: "Kabir Nabil",
     userId: "user_demo_6",
     createdAt: new Date().toISOString(),
     bidsCount: 25,
@@ -86,7 +85,6 @@ export const initialTasks = [
 
 
 /**
-
  * @param {string} dateString
  * @returns {string} 
  */
@@ -121,7 +119,7 @@ const JobCard = ({ task }) => {
         budget: 750,
         deadline: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
         bidsCount: 9,
-        userName: "Alex B",
+        userName: "Alex brown",
     };
   
   const currentTask = task || defaultTask;
@@ -184,6 +182,7 @@ const JobCard = ({ task }) => {
         <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
           <Users className="h-4 w-4 text-purple-500" />
           <span>{currentTask.bidsCount} bids</span>
+          
         </div>
       </div>
 

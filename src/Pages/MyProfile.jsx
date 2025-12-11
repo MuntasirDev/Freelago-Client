@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { User, Mail, Image, Save, Loader2 } from "lucide-react"; 
 import { useAuth } from '../Provider/AuthProvider'; 
-import { toast, Toaster } from "sonner"; // ✅ Toaster কম্পোনেন্ট এখানে ইমপোর্ট করা হয়েছে
+import { toast, Toaster } from "sonner"; 
 
-// --- Custom Card Components ---
 const CustomCard = ({ children, className = '' }) => (
     <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-2xl border border-gray-200 dark:border-gray-700 ${className}`}>
         {children}
@@ -25,22 +24,19 @@ const CustomCardContent = ({ children, className = 'p-6' }) => (
         {children}
     </div>
 );
-// --- End Custom Card Components ---
+
 
 const MyProfile = () => {
     
-    // Auth Hook
     const { user, updateUserProfile, loading } = useAuth(); 
-    
-    // State
     const [name, setName] = useState("");
     const [photoURL, setPhotoURL] = useState("");
     const [isUpdating, setIsUpdating] = useState(false);
     
-    // Helper function for default avatar
+    
     const getPhotoUrl = (url) => url || "https://api.dicebear.com/7.x/avataaars/svg?seed=User";
     
-    // Load user data into state on mount or user change
+  
     useEffect(() => {
         if (user) {
             setName(user.displayName || "");
@@ -48,12 +44,12 @@ const MyProfile = () => {
         }
     }, [user]);
     
-    // Handle Profile Update Logic
+   
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         
         if (!name.trim()) {
-            // ✅ শুধু toast ফাংশন কল করা হয়েছে
+          
             toast.error("Name cannot be empty.")
             return;
         }
@@ -61,23 +57,21 @@ const MyProfile = () => {
         setIsUpdating(true);
 
         try { 
-            // updateUserProfile এ শুধুমাত্র name এবং photoURL পাস করা হচ্ছে
+            
             await updateUserProfile(name, photoURL); 
-            // ✅ শুধু toast ফাংশন কল করা হয়েছে
+            
             toast.success("Profile updated successfully!")
             
         } catch (error) {
             console.error("Profile update failed:", error);
-            // alert এর পরিবর্তে toast.error ব্যবহার করা যেতে পারে
+           
             toast.error("Failed to update profile: " + error.message);
         } finally {
             setIsUpdating(false);
         }
     };
     
-    // --- Loading and Not Logged In States ---
     
-    // 1. Initial Loading State (while Firebase/Auth is initializing)
     if (loading || user === null) {
         return (
             <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
@@ -87,10 +81,10 @@ const MyProfile = () => {
         );
     }
     
-    // 2. Not Logged In State (after loading, user is falsy)
+   
     if (!user) {
         return (
-            // ✅ Toaster এখানে রেন্ডার করা হয়েছে
+            
             <div className="min-h-screen bg-white dark:bg-gray-950 flex flex-col items-center justify-center">
                 <Toaster richColors position="top-right" /> 
                 <h1 className="text-2xl font-bold text-red-500 dark:text-red-400">Please log in to view your profile.</h1>
@@ -98,12 +92,12 @@ const MyProfile = () => {
         );
     }
     
-    // --- Main Profile View ---
+   
     return (
-        // Main container background supports both themes
+       
         <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-white py-12">
             
-            {/* ✅ Toaster কম্পোনেন্টটি এখানে বা অ্যাপের লেআউটে একবার রাখুন */}
+           
             <Toaster richColors position="top-right" /> 
 
             <div className="container mx-auto px-4 max-w-2xl">
@@ -111,14 +105,14 @@ const MyProfile = () => {
                     👤 My Profile
                 </h1>
                 
-                {/* Current Information Card */}
+              
                 <CustomCard className="mb-8">
                     <CustomCardHeader>
                         <CustomCardTitle>Current Information</CustomCardTitle>
                         <CustomCardDescription>View your account details</CustomCardDescription>
                     </CustomCardHeader>
                     <CustomCardContent className="space-y-6">
-                        {/* Summary Block */}
+                       
                         <div className="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-xl bg-gray-100 dark:bg-gray-900 shadow-inner border border-gray-300 dark:border-gray-700">
                             <img
                                 src={getPhotoUrl(user.photoURL)}
@@ -134,10 +128,10 @@ const MyProfile = () => {
                             </div>
                         </div>
                         
-                        {/* Detail Grid */}
+                      
                         <div className="grid gap-4">
                             
-                            {/* Name Detail */}
+                           
                             <div className="flex items-center gap-3 p-4 rounded-xl bg-gray-200/50 dark:bg-gray-700/50">
                                 <User className="h-5 w-5 text-indigo-500 dark:text-indigo-400" />
                                 <div className="flex-1">
@@ -146,7 +140,7 @@ const MyProfile = () => {
                                 </div>
                             </div>
                             
-                            {/* Email Detail (Read-only) */}
+                           
                             <div className="flex items-center gap-3 p-4 rounded-xl bg-gray-200/50 dark:bg-gray-700/50">
                                 <Mail className="h-5 w-5 text-teal-500 dark:text-teal-400" />
                                 <div className="flex-1">
@@ -155,7 +149,7 @@ const MyProfile = () => {
                                 </div>
                             </div>
                             
-                            {/* Photo URL Detail */}
+                           
                             <div className="flex items-center gap-3 p-4 rounded-xl bg-gray-200/50 dark:bg-gray-700/50">
                                 <Image className="h-5 w-5 text-amber-500 dark:text-amber-400" />
                                 <div className="flex-1 min-w-0">
@@ -169,7 +163,7 @@ const MyProfile = () => {
                     </CustomCardContent>
                 </CustomCard>
                 
-                {/* Edit Profile Card */}
+               
                 <CustomCard>
                     <CustomCardHeader>
                         <CustomCardTitle>Edit Profile</CustomCardTitle>
@@ -178,7 +172,7 @@ const MyProfile = () => {
                     <CustomCardContent>
                         <form onSubmit={handleUpdateProfile} className="space-y-6">
                             
-                            {/* Name Input */}
+                            
                             <div className="space-y-2">
                                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
                                 <input
@@ -193,7 +187,7 @@ const MyProfile = () => {
                                 />
                             </div>
                             
-                            {/* Photo URL Input */}
+                            
                             <div className="space-y-2">
                                 <label htmlFor="photoURL" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Photo URL</label>
                                 <input
@@ -207,7 +201,7 @@ const MyProfile = () => {
                                 />
                             </div>
                             
-                            {/* Submit Button */}
+                           
                             <button 
                                 type="submit" 
                                 className="w-full py-3 rounded-xl text-lg font-bold transition shadow-md bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"

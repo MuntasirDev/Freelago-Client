@@ -1,4 +1,3 @@
-// src/Components/UI/Label.jsx (সংশোধিত কোড)
 import React from "react";
 
 

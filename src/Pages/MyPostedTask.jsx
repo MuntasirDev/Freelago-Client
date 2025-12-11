@@ -1,5 +1,3 @@
-// src/Pages/MyPostedTask.jsx
-
 import { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Edit2, Trash2, Eye, Plus, Calendar, DollarSign, Users, Briefcase } from "lucide-react"; 
@@ -8,7 +6,6 @@ import { toast } from "sonner";
 import Layout from "../Components/UI/Layout"; 
 import { AuthContext } from '../Provider/AuthProvider'; 
 
-// --- Configuration ---
 const categoryColors = {
     "Web Development": "badge-primary",
     "Mobile Development": "badge-secondary",
@@ -19,7 +16,6 @@ const categoryColors = {
     "Other": "badge-neutral",
 };
 
-// 💡 Mock data initialization (আপনার API কল সফল হলে এটি খালি করে দিতে পারেন)
 const initialMockTasks = []; 
 
 const MyPostedTasks = () => {
@@ -30,16 +26,12 @@ const MyPostedTasks = () => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [taskToDelete, setTaskToDelete] = useState(null);
 
-    // =========================================================
-    // 🚀 ডেটা লোডিং লজিক
-    // =========================================================
     useEffect(() => {
         if (user && user.email && !loading) {
             const fetchMyTasks = async () => {
                 setIsFetching(true);
                 const email = user.email; 
                 
-                // ⚠️ আপনার আসল API URL
                 const API_URL = `http://localhost:3000/my-tasks/${email}`; 
                 
                 try {
@@ -48,10 +40,10 @@ const MyPostedTasks = () => {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     const data = await response.json();
-                    // 💡 API থেকে প্রাপ্ত ডেটার id property যদি _id হয়, তবে নিচের mapping ব্যবহার করুন
+                    
                     const formattedData = data.map(task => ({
                         ...task,
-                        id: task._id // _id কে id হিসেবে ব্যবহার করা হচ্ছে
+                        id: task._id 
                     }));
                     setMyTasks(formattedData);
                 } catch (error) {
@@ -68,29 +60,34 @@ const MyPostedTasks = () => {
         }
     }, [user, loading]); 
 
-    // Delete logic (Need to be updated with real API call)
     const handleDelete = async () => {
-        if (taskToDelete) {
-            setIsFetching(true); 
-            
-            // ⚠️ এখানে আসল DELETE API কল লজিক বসান
-            // const DELETE_API_URL = `http://localhost:3000/task/${taskToDelete.id}`;
-            
-            try {
-               
-                await new Promise(resolve => setTimeout(resolve, 500)); 
-                
-                setMyTasks(prevTasks => prevTasks.filter(task => task.id !== taskToDelete.id));
-                toast.success(`Task "${taskToDelete.title}" deleted successfully.`);
-                setDeleteModalOpen(false);
-                setTaskToDelete(null);
+        if (!taskToDelete || !taskToDelete.id) return;
+        
+        setIsFetching(true); 
+        
+        const DELETE_API_URL = `http://localhost:3000/task/${taskToDelete.id}`;
+        
+        try {
+            const response = await fetch(DELETE_API_URL, {
+                method: 'DELETE',
+            });
 
-            } catch (error) {
-                console.error("Deletion error:", error);
-                toast.error("Failed to delete the task.");
-            } finally {
-                setIsFetching(false);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
             }
+            
+            setMyTasks(prevTasks => prevTasks.filter(task => task.id !== taskToDelete.id));
+            toast.success(`Task "${taskToDelete.title}" deleted successfully.`);
+            
+            setDeleteModalOpen(false);
+            setTaskToDelete(null);
+
+        } catch (error) {
+            console.error("Deletion error:", error);
+            toast.error(`Failed to delete the task: ${error.message}`);
+        } finally {
+            setIsFetching(false);
         }
     };
 
@@ -99,7 +96,7 @@ const MyPostedTasks = () => {
         setDeleteModalOpen(true);
     };
 
-    // 💡 মূল লোডিং স্টেট হ্যান্ডেলিং
+    // 💡 লোডিং বা লগইন চেক
     if (loading || isFetching) {
         return (
             <Layout>
@@ -110,7 +107,6 @@ const MyPostedTasks = () => {
         );
     }
     
-    // 💡 যদি ব্যবহারকারী লগইন না করে, তবে একটি বার্তা দেখান
     if (!user) {
         return (
             <Layout>
@@ -126,8 +122,7 @@ const MyPostedTasks = () => {
     return (
         <Layout>
             <div className="container-custom py-8 dark:text-white">
-                
-                {/* Header Section */}
+                 
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                     <div>
                         <h1 className="text-3xl font-bold mb-2">My Posted Tasks</h1>
@@ -136,16 +131,15 @@ const MyPostedTasks = () => {
                             
                         </p>
                     </div>
-                    {/* Post New Task Button */}
+                    
                     <Link to="/add-task" className="btn bg-blue-500 text-white hover:bg-blue-700 rounded-lg">
                         <Plus className="h-4 w-4" />
                         Post New Task
                     </Link>
                 </div>
 
-                {/* Empty State / Task List */}
                 {myTasks.length === 0 ? (
-                    // Empty State Card 
+                    
                     <div className="card bg-base-100 shadow-xl dark:bg-gray-800 dark:text-white">
                         <div className="card-body items-center text-center py-12">
                             <div className="h-24 w-24 rounded-full bg-base-200 dark:bg-gray-700 flex items-center justify-center mb-4">
@@ -161,7 +155,7 @@ const MyPostedTasks = () => {
                     </div>
                 ) : (
                     <>
-                        {/* 🚀 Mobile View (Cards) - md:hidden means shows up to medium screens (767px) */}
+                       
                         <div className="md:hidden space-y-4 ">
                             {myTasks.map((task) => (
                                 <div key={task.id} className="card bg-base-100 shadow-lg dark:bg-gray-800 dark:text-white border border-gray-700/50">
@@ -170,7 +164,7 @@ const MyPostedTasks = () => {
                                         {/* Header */}
                                         <div className="flex justify-between items-start">
                                             <h2 className="card-title text-xl font-bold max-w-[80%]">{task.title}</h2>
-                                            <span className={`badge p-5 text-white font-bold text-xs  ${categoryColors[task.category] || "badge-neutral"} `}>{task.category}</span>
+                                            <span className={`badge p-5 text-white font-bold text-xs  ${categoryColors[task.category] || "badge-neutral"} `}>{task.category}</span>
                                         </div>
 
                                         {/* Details */}
@@ -197,9 +191,10 @@ const MyPostedTasks = () => {
                                             >
                                                 <Eye className="h-4 w-4" /> View
                                             </button>
+                                           
                                             <button
                                                  className="btn btn-ghost btn-xs sm:btn-sm text-yellow-600"
-                                                 onClick={() => navigate(`/edit-task/${task.id}`)}
+                                                 onClick={() => navigate(`/update/${task.id}`)} 
                                             >
                                                 <Edit2 className="h-4 w-4" /> Edit
                                             </button>
@@ -221,14 +216,13 @@ const MyPostedTasks = () => {
                             ))}
                         </div>
 
-                        {/* 🚀 Desktop & Tablet View (Table) - hidden md:block means shows from medium screens (768px) and up */}
                         <div className="hidden md:block card bg-base-100 shadow-xl overflow-hidden dark:bg-gray-800 dark:text-white">
                             <div className="overflow-x-auto">
                                 <table className="table w-full text-base dark:text-white">
                                     <thead>
                                         <tr className='dark:bg-gray-700 dark:text-white'>
-                                            <th className='text-base'>Title</th>
                                             <th className='text-base'>Category</th>
+                                            <th className='text-base'>Title</th>
                                             <th className='text-base'>Budget</th>
                                             <th className='text-base'>Deadline</th>
                                             <th className='text-base'>Bids</th>
@@ -238,18 +232,16 @@ const MyPostedTasks = () => {
                                     <tbody>
                                         {myTasks.map((task) => (
                                             <tr key={task.id} className="hover:bg-base-200 dark:hover:bg-gray-700/50">
-                                                {/* 🚀 FIXED: Task Title Truncation Logic */}
+                                                <td>
+                                               <span className={`badge p-3 text-white font-bold text-xs ${categoryColors[task.category] || "badge-neutral"} `}>
+                                                    {task.category}
+                                                        </span>
+                                                             </td>
                                                 <td className="font-medium max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
-                                                    <span className="truncate block max-w-full" title={task.title}>
-                                                        {task.title}
-                                                    </span>
-                                                </td>
-                                                {/* ---------------------------------- */}
-                                               <td className="font-medium max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
-    <span className="truncate block max-w-full" title={task.title}>
-        {task.title}
-    </span>
-</td>
+                                               <span className="truncate block max-w-full" title={task.title}>
+                                                                 {task.title}
+                                                       </span>
+                                                    </td>
                                                 <td><DollarSign className="h-4 w-4 inline mr-1 text-green-500" />{task.budget}</td>
                                                 <td className='whitespace-nowrap'>{format(new Date(task.deadline), "MMM dd, yyyy")}</td>
                                                 <td>
@@ -267,9 +259,10 @@ const MyPostedTasks = () => {
                                                         >
                                                              <Eye className="h-4 w-4" />
                                                         </button>
+                                                       
                                                         <button
                                                              className="btn btn-ghost btn-sm text-yellow-600 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                                             onClick={() => navigate(`/edit-task/${task.id}`)}
+                                                             onClick={() => navigate(`/update/${task.id}`)} 
                                                         >
                                                              <Edit2 className="h-4 w-4" />
                                                         </button>
@@ -296,7 +289,7 @@ const MyPostedTasks = () => {
                     </>
                 )}
 
-                {/* Delete Confirmation Modal (Unchanged) */}
+                {/* Delete Confirmation Modal */}
                 <dialog className={`modal ${deleteModalOpen ? "modal-open" : ""}`}>
                      <div className="modal-box dark:text-white dark:bg-gray-900 border border-red-500/50">
                           <h3 className="font-bold text-lg text-error">Confirm Deletion</h3>

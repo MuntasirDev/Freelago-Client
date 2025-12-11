@@ -1,36 +1,26 @@
-// src/pages/Home.jsx
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-// JobCard কম্পোনেন্ট ইমপোর্ট করা হয়েছে
 import JobCard, { initialTasks } from "../Components/JobCard";
-// Lucide Icons
 import { ArrowRight, Search, Users, Shield, Zap, Code, Palette, PenTool, Megaphone, Database, Video, ChevronLeft, ChevronRight } from "lucide-react";
 
-// 💡 ধরে নিলাম আপনি আপনার Authentication Context থেকে useAuth() হুকটি ইম্পোর্ট করবেন
-// import { useAuth } from "../Context/AuthContext"; 
-
-// --- DUMMY DATA ---
 const heroSlides = [
     {
         title: "Find the Perfect Freelancer",
         subtitle: "Connect with talented professionals ready to bring your projects to life",
         cta: "Browse Tasks",
-        // Protected Route: লগ আউট থাকলে /auth/login এ যাবে (PrivateRoute দ্বারা)
         link: "/browse-tasks", 
     },
     {
         title: "Post Your Task Today",
         subtitle: "Describe what you need and let skilled freelancers compete for your project",
         cta: "Post a Task",
-        link: "/add-task", // Protected Route: লগ আউট থাকলে /auth/login এ যাবে (PrivateRoute দ্বারা)
+        link: "/add-task",
     },
     {
         title: "Get Work Done Fast",
         subtitle: "Quality work delivered on time with our secure platform",
-        // 🚀 এই CTA পরিবর্তন করা হবে: লগইন থাকলে /profile, না থাকলে /auth/register
         cta: "Get Started", 
-        link: "/auth/register", // এই লিঙ্কটি পরে useAuth লজিক দ্বারা ওভাররাইড হবে
+        link: "/auth/register", 
     },
 ];
 
@@ -43,29 +33,18 @@ const categories = [
     { name: "Video Editing", icon: Video, color: "bg-red-500" },
 ];
 
-// --- HOME COMPONENT ---
+
 
 const Home = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
-    const isLoading = false; // Mock loading state
-    
-    // 💡 Auth Context ব্যবহার: ধরে নিলাম user বা isLoggedIn এমন একটি ভ্যালু পাবেন।
-    // const { user, loading } = useAuth();
-    // 💡 আপাতত ডামি ভ্যালু ব্যবহার করছি। আপনি এটি আপনার Auth Context দিয়ে প্রতিস্থাপন করুন।
-    const isLoggedIn = false; // <<< আপনার Auth Context থেকে আসা isLoggedIn বা user ? true : false দিয়ে প্রতিস্থাপন করুন।
-    
-    // Protected link variable (যা লগ আউট থাকলে Login-এ যাবে)
+    const isLoading = false; 
+    const isLoggedIn = false; 
     const protectedLink = "/browse-tasks"; 
-
-    // 🚀 লগইন স্ট্যাটাসের ভিত্তিতে CTA-এর লিঙ্ক নির্ধারণ (সংশোধিত)
-    // লগড-ইন থাকলে যাবে /profile, না থাকলে যাবে /auth/register
     const ctaLink = isLoggedIn ? "/profile" : "/auth/register";
-    
-    // 🚀 আপনার অনুরোধ অনুযায়ী, CTA-তে সবসময় 'Create Account' দেখাবে
     const ctaText = "Create Account"; 
 
 
-    // Hero slider auto-advance
+    
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
@@ -76,7 +55,7 @@ const Home = () => {
     const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
 
-    // Helper for button styling
+  
     const baseButtonClass = "inline-flex items-center justify-center rounded-lg px-6 py-3 text-lg font-medium transition-colors shadow-md";
     const primaryButtonClass = `${baseButtonClass} bg-blue-500 hover:bg-blue-600 text-white`;
     const outlineButtonClass = `${baseButtonClass} bg-white dark:bg-gray-800 text-blue-500 dark:text-blue-300 border border-blue-500 hover:bg-gray-100 dark:hover:bg-gray-700`;
@@ -84,7 +63,7 @@ const Home = () => {
     return (
         <div className="min-h-screen bg-white  dark:bg-black">
             
-            {/* Hero Section */}
+            
             <section className="relative bg-gray-100 dark:bg-black py-20 lg:py-32 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                     <div className="max-w-3xl mx-auto text-center">
@@ -106,11 +85,10 @@ const Home = () => {
                                     </p>
                                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                         <Link 
-                                            // 🚀 Hero CTA Link: If last slide ("Get Work Done Fast"), use the dynamic ctaLink
+                                            
                                             to={slide.title === "Get Work Done Fast" ? ctaLink : slide.link} 
                                             className={primaryButtonClass}
                                         >
-                                            {/* 🚀 Hero CTA Text: If last slide ("Get Work Done Fast"), use the dynamic ctaText */}
                                             {slide.title === "Get Work Done Fast" ? ctaText : slide.cta}
                                             <ArrowRight className="ml-2 h-5 w-5" />
                                         </Link>
@@ -123,7 +101,7 @@ const Home = () => {
                             ))}
                         </div>
 
-                        {/* Slider Controls */}
+                       
                         <div className="flex items-center justify-center gap-4 mt-8">
                             <button onClick={prevSlide} className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
                                 <ChevronLeft className="h-5 w-5" />
@@ -145,7 +123,7 @@ const Home = () => {
                         </div>
                     </div>
 
-                    {/* Stats */}
+                  
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto">
                         {[
                             { label: "Active Freelancers", value: "10,000+" },
@@ -165,7 +143,7 @@ const Home = () => {
                 </div>
             </section>
             
-            {/* Featured Tasks (JobCard Implementation) */}
+          
             <section className="py-16 lg:py-24 dark:bg-black">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
@@ -177,14 +155,14 @@ const Home = () => {
 
                     {isLoading ? (
                         <div className="flex justify-center py-12">
-                            {/* Loading Spinner... */}
+                            
                         </div>
                     ) : (
-                        // *** JobCard কম্পোনেন্টটি ইমপোর্ট করা initialTasks ডেটা দিয়ে রেন্ডার করা হয়েছে ***
+                       
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {/* initialTasks অ্যারে JobCard ফাইল থেকে ইমপোর্ট করা হয়েছে */}
+                          
                             {initialTasks.map((task) => (
-                                // প্রতিটি JobCard এ ক্লিক করলে /task/:id এ যাবে, যা Protected (লগ আউট থাকলে /auth/login এ যাবে)
+                                
                                 <JobCard key={task.id} task={task} /> 
                             ))}
                         </div>
@@ -248,7 +226,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Categories */}
+           
             <section className="py-16 lg:py-24 dark:bg-black">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
@@ -262,7 +240,7 @@ const Home = () => {
                         {categories.map((category, index) => (
                             <Link
                                 key={index}
-                                // এই লিঙ্কটি /browse-tasks রুটে যাবে, যা Protected (লগ আউট থাকলে /auth/login এ যাবে)
+                                
                                 to={`/browse-tasks?category=${encodeURIComponent(category.name)}`}
                                 className="group bg-white dark:bg-gray-700 rounded-xl p-6 border border-gray-200 dark:border-gray-600 text-center shadow-sm hover:shadow-lg transition-shadow"
                             >
@@ -323,12 +301,12 @@ const Home = () => {
                             Join thousands of freelancers and clients who are already achieving their goals on FreelaGo.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            {/* 🚀 Final CTA Link: Dynamic link/text based on login status */}
+                           
                             <Link to={ctaLink} className={primaryButtonClass}> 
                                 {ctaText} 
                                 <ArrowRight className="ml-2 h-5 w-5" />
                             </Link>
-                            <Link to={protectedLink} className={outlineButtonClass}>Browse Tasks</Link> {/* Protected Link */}
+                            <Link to={protectedLink} className={outlineButtonClass}>Browse Tasks</Link> 
                         </div>
                     </div>
                 </div>
