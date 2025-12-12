@@ -177,7 +177,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* How It Works */}
+          
             <section className="py-16 lg:py-24 bg-gray-100 dark:bg-black">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
@@ -256,7 +256,6 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Trust Section */}
             <section className="py-16 lg:py-24 bg-blue-500 text-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -292,7 +291,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* CTA */}
+            
             <section className="py-16 lg:py-24 dark:bg-black">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 p-8 md:p-12 text-center max-w-4xl mx-auto shadow-xl">

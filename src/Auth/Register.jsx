@@ -116,7 +116,7 @@ const Register = () => {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         
                         <div className="space-y-2">
-                            <Label htmlFor="name">Full Name *</Label>
+                            <Label htmlFor="name">Full Name </Label>
                             <div className="relative">
                                 <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                                 <Input
@@ -134,7 +134,7 @@ const Register = () => {
 
                         
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email *</Label>
+                            <Label htmlFor="email">Email </Label>
                             <div className="relative">
                                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                                 <Input
@@ -169,7 +169,7 @@ const Register = () => {
 
                         
                         <div className="space-y-2">
-                            <Label htmlFor="password">Password *</Label>
+                            <Label htmlFor="password">Password </Label>
                             <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                                 <Input

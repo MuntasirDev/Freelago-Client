@@ -161,13 +161,13 @@ const MyPostedTasks = () => {
                                 <div key={task.id} className="card bg-base-100 shadow-lg dark:bg-gray-800 dark:text-white border border-gray-700/50">
                                     <div className="card-body p-5 space-y-3">
                                         
-                                        {/* Header */}
+                                        
                                         <div className="flex justify-between items-start">
                                             <h2 className="card-title text-xl font-bold max-w-[80%]">{task.title}</h2>
                                             <span className={`badge p-5 text-white font-bold text-xs  ${categoryColors[task.category] || "badge-neutral"} `}>{task.category}</span>
                                         </div>
 
-                                        {/* Details */}
+                                       
                                         <div className="flex flex-col space-y-2 text-sm text-gray-500 dark:text-gray-400">
                                             <div className="flex items-center gap-2">
                                                 <DollarSign className="h-4 w-4 text-green-500" />

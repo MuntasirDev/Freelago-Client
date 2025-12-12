@@ -180,7 +180,7 @@ const Login = () => {
                 <div className="text-white max-w-md">
                     <h2 className="text-4xl font-bold mb-6">Find the best freelancers for your projects</h2>
                     <p className="text-primary-foreground/80 text-lg">
-                        Join thousands of businesses and freelancers who trust **FreelaGo** for quality work delivered on time.
+                        Join thousands of businesses and freelancers who trust FreelaGo for quality work delivered on time.
                     </p>
                 </div>
             </div>
