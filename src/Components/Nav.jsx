@@ -61,12 +61,8 @@ const Nav = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold text-gray-900 dark:text-white">
-              <span className="text-blue-500 ultra-regular font-extrabold text-4xl">
-                F
-              </span>
-              reelaGo
-            </span>
+            <span className="text-3xl font-bold text-gray-900 dark:text-white">
+              <span className="text-blue-500 font-extrabold text-5xl">F</span>reelaGo</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">

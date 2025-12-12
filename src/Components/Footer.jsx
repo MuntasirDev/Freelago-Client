@@ -16,8 +16,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-2">
-              <span className="text-xl font-bold text-gray-900 dark:text-white">
-                <span className="text-blue-500 ultra-regular font-extrabold text-4xl">
+              <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                <span className="text-blue-500 font-extrabold text-5xl">
                   F
                 </span>
                 reelaGo

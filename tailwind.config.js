@@ -8,11 +8,16 @@ export default {
   ],
 
   theme: {
-    extend: {},
+    extend: {
+      // 🚀 ADD THIS SECTION to define the custom background gradient utility
+      backgroundImage: {
+        'linear-to-br': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
+      },
+    },
   },
 
   plugins: [
-    "daisyui", 
+    require('daisyui'), 
   ],
 
   daisyui: {

@@ -1,10 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Ultra&display=swap");
-
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
+@plugin "daisyui";
 
-.ultra-regular {
-  font-family: "Ultra", serif;
-  font-weight: 600;
-  font-style: normal;
-}
+@custom-variant dark (&:where(.dark, .dark *));

@@ -107,8 +107,7 @@ const Register = () => {
                         <Link to="/" className="inline-flex items-center gap-2 mb-6">
                         
                         
-                        <span className="text-xl font-bold text-gray-900 dark:text-white"> <span className="text-blue-500 ultra-regular font-extrabold text-4xl">F</span>reelaGo</span>
-                    
+                        <span className="text-3xl font-bold dark:text-black"> <span className="text-blue-500 font-extrabold text-5xl">F</span>reelaGo</span>
                         </Link>
                         <h1 className="text-2xl font-bold text-foreground mb-2">Create Account</h1>
                         <p className="text-muted-foreground">Sign up to get started</p>
