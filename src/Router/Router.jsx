@@ -21,7 +21,7 @@ import MyProfile from "../Pages/MyProfile";
 import UpdateTask from "../Pages/UpdateTask";
 
 const browseTasksLoader = async () => {
-  const API_URL = "http://localhost:3000/tasks";
+  const API_URL = "https://freelago-backend.vercel.app/tasks";
 
   try {
     const response = await fetch(API_URL);
@@ -57,10 +57,10 @@ const browseTasksLoader = async () => {
 
 const taskDetailsLoader = async ({ params }) => {
   const taskId = params.id;
-  const API_URL = `http://localhost:3000/tasks/${taskId}`;
+  const API_URL = `https://freelago-backend.vercel.app/tasks/${taskId}`;
 
   try {
-    // নির্দিষ্ট টাস্কের জন্য API কল
+ 
     const response = await fetch(API_URL);
 
     if (!response.ok) {

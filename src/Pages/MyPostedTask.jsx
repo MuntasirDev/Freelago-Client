@@ -32,7 +32,7 @@ const MyPostedTasks = () => {
                 setIsFetching(true);
                 const email = user.email; 
                 
-                const API_URL = `http://localhost:3000/my-tasks/${email}`; 
+                const API_URL = `https://freelago-backend.vercel.app/my-tasks/${email}`; 
                 
                 try {
                     const response = await fetch(API_URL);
@@ -65,7 +65,7 @@ const MyPostedTasks = () => {
         
         setIsFetching(true); 
         
-        const DELETE_API_URL = `http://localhost:3000/task/${taskToDelete.id}`;
+        const DELETE_API_URL = `https://freelago-backend.vercel.app/task/${taskToDelete.id}`;
         
         try {
             const response = await fetch(DELETE_API_URL, {

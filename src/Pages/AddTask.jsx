@@ -27,7 +27,7 @@ const TASK_CATEGORIES = [
 ];
 
 const postTaskToDatabase = async (taskData) => {
-  const URL = "http://localhost:3000/task";
+  const URL = "https://freelago-backend.vercel.app/task";
 
   const response = await fetch(URL, {
     method: "POST",

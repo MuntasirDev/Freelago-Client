@@ -34,7 +34,7 @@ const TASK_CATEGORIES = [
 // --- API Functions ---
 // টাস্ক ডেটা লোড করার ফাংশন
 const fetchTaskDetails = async (id) => {
-    const URL = `http://localhost:3000/tasks/${id}`; 
+    const URL = `https://freelago-backend.vercel.app/tasks/${id}`; 
     const response = await fetch(URL);
 
     if (!response.ok) {
@@ -46,7 +46,7 @@ const fetchTaskDetails = async (id) => {
 
 // টাস্ক আপডেট করার ফাংশন (PUT/PATCH রিকোয়েস্ট)
 const updateTaskToDatabase = async (taskId, taskData) => {
-    const URL = `http://localhost:3000/tasks/${taskId}`; 
+    const URL = `https://freelago-backend.vercel.app/tasks/${taskId}`; 
     
     const response = await fetch(URL, {
         method: 'PUT', // PUT ব্যবহার করা হলো
