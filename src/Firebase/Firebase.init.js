@@ -6,12 +6,12 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAYJHU5FVbpjdMGB0tmZ9QTK19VXB0O1Zo",
-  authDomain: "freelago-c070c.firebaseapp.com",
-  projectId: "freelago-c070c",
-  storageBucket: "freelago-c070c.firebasestorage.app",
-  messagingSenderId: "385510109708",
-  appId: "1:385510109708:web:215f6df443b63e34903429"
+  apiKey: import.meta.env.VITE_apiKey,
+  authDomain: import.meta.env.VITE_authDomain,
+  projectId: import.meta.env.VITE_projectId,
+  storageBucket: import.meta.env.VITE_storageBucket,
+  messagingSenderId: import.meta.env.VITE_messagingSenderId,
+  appId: import.meta.env.VITE_appId,
 };
 
 // Initialize Firebase

@@ -1,5 +1,3 @@
-// src/pages/Register.jsx
-
 import { useState, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, User, Image, Loader2, Check, X } from "lucide-react";
@@ -8,7 +6,7 @@ import { Input } from "../Components/UI/Input";
 import { Label } from "../Components/UI/Label"; 
 import { toast } from "sonner";
 import { FaGoogle } from "react-icons/fa";
-import { AuthContext } from '../Provider/AuthProvider'; // নিশ্চিত করুন এটি সঠিক পাথ
+import { AuthContext } from '../Provider/AuthProvider'; 
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -17,14 +15,9 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    
-    // AuthContext থেকে প্রয়োজনীয় ফাংশন এবং স্টেট নেওয়া হয়েছে
     const { createUser, googleSignIn, loading, updateUserProfile } = useContext(AuthContext); 
-    
     const navigate = useNavigate();
     const location = useLocation();
-
-    // PrivateRoute থেকে আসা পূর্ববর্তী পাথটি নেওয়া হচ্ছে
     const from = location.state?.from || "/"; 
 
     const passwordValidation = {
@@ -51,19 +44,19 @@ const Register = () => {
         setIsLoading(true);
         
         try {
-            // ১. ইউজার তৈরি করা
+            
             await createUser(email, password);
             
-            // ২. প্রোফাইল আপডেট করা
+            
             await updateUserProfile(name, photoURL);
             
             toast.success("Account created successfully!");
-            // সফল হলে পূর্বের রুটে নেভিগেট করা
+            
             navigate(from, { replace: true });
 
         } catch (error) {
             console.error("Registration error:", error.message);
-            // Firebase error message দেখাবে
+            
             toast.error(error.message || "Registration failed"); 
         } finally {
             setIsLoading(false);
@@ -73,11 +66,11 @@ const Register = () => {
     const handleGoogleLogin = async () => {
         setIsLoading(true);
         try {
-            // Google Sign-In কল করা
+            
             await googleSignIn(); 
             
             toast.success("Welcome to FreelaGo!");
-            // সফল হলে পূর্বের রুটে নেভিগেট করা
+            
             navigate(from, { replace: true });
             
         } catch (error) {

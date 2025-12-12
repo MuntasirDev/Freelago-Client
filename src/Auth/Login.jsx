@@ -8,7 +8,7 @@ import { Input } from "../Components/UI/Input";
 import { Label } from "../Components/UI/Label";
 import { toast } from "sonner";
 import { FaGoogle } from "react-icons/fa";
-import { AuthContext } from '../Provider/AuthProvider'; // নিশ্চিত করুন এটি সঠিক পাথ
+import { AuthContext } from '../Provider/AuthProvider'; 
 
 
 const Login = () => {
@@ -17,13 +17,13 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false); 
     
-    // AuthContext থেকে প্রয়োজনীয় ফাংশন এবং স্টেট নেওয়া হয়েছে
+    
     const { signIn, googleSignIn, loading } = useContext(AuthContext); 
     
     const navigate = useNavigate();
     const location = useLocation();
 
-    // PrivateRoute থেকে আসা পূর্ববর্তী পাথটি নেওয়া হচ্ছে
+   
     const from = location.state?.from || "/"; 
 
     const handleSubmit = async (e) => {
@@ -37,16 +37,16 @@ const Login = () => {
         setIsLoading(true);
         
         try {
-            // ইমেইল/পাসওয়ার্ড দিয়ে লগইন করা
+           
             await signIn(email, password); 
             
             toast.success("Login successful!");
-            // সফল হলে পূর্বের রুটে নেভিগেট করা
+           
             navigate(from, { replace: true });
             
         } catch (error) {
             console.error("Login error:", error.message);
-            // Firebase error message দেখাবে
+            
             toast.error(error.message || "Login failed"); 
         } finally {
             setIsLoading(false);
@@ -56,7 +56,7 @@ const Login = () => {
     const handleGoogleLogin = async () => {
         setIsLoading(true);
         try {
-            // Google Sign-In কল করা
+            
             await googleSignIn(); 
             
             toast.success("Welcome! (Google Login)");
